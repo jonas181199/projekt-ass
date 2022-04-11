@@ -12,7 +12,7 @@
       <h1>Getränkemarkt-Portal</h1>
       <form method=“POST“ action=“Markt.php”>
          <fieldset>
-            <legend>Bitte die Anmeldendaten für Ihren Markt eingeben</legend>
+            <legend>Bitte die Anmeldedaten für Ihren Markt eingeben</legend>
             <p>
                <label for="mid">Markt-ID: </label>
                <input type=”text” name="marktid" id="mid">
