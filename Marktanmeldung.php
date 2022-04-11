@@ -9,15 +9,31 @@
    </HEAD>
    <BODY>
       <!-- HTML-Körper -->
-      <form method=“POST“ action=“loginScript.php”>
-        Markt-ID: <input type=”text” name=”userName” />
-        <br> <br>
-        Kennwort: <input type=”password” name=”password” />
-        <br> <br>
-        <a href="Markt.php"> <button type=”submit” name=”submit”> Anmelden</button> </a> 
-        
-        <br> <br>
-        <a href=""> Registrieren</a> 
-        </form>        
+      <h1>Getränkemarkt-Portal</h1>
+      <form method=“POST“ action=“Markt.php”>
+         <fieldset>
+            <legend>Bitte die Anmeldendaten für Ihren Markt eingeben</legend>
+            <p>
+               <label for="mid">Markt-ID: </label>
+               <input type=”text” name="marktid" id="mid">
+            </p>
+            <p>
+               <label for="mpasswort">Passwort: </label>
+               <input type="password" name="marktpassword" id="mpasswort">
+            </p>
+            <p>
+               <input type="submit" name="loginmarkt" value="Anmelden">
+            </p>
+         </fieldset>
+      </form>
+<br>
+      <form action="Marktregistrierung.php">
+         <fieldset>
+            <legend>Wenn Sie neu auf dem Portal sind, können Sie sich hier registrieren</legend>
+            <p>
+               <a href="Marktregistrierung.php"> Registrieren</a> 
+            </p>
+         </fieldset>
+      </form>
    </BODY>
 </HTML>
