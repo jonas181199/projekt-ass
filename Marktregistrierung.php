@@ -9,14 +9,26 @@
    </HEAD>
    <BODY>
       <!-- HTML-Körper -->
-      <form method=“POST“ action=“loginScript.php”>
-        Markt-ID: <input type=”text” name=”userName” />
-        <br> <br>
-        Marktname: <input type=”text” name=”marktName” />
-        <br> <br>
-        Kennwort: <input type=”password” name=”password” />
-        <br> <br>
-        <button type=”submit” name=”submit”> Registrieren</button>
+      <h2>Registrieren Sie Ihren Markt</h2>
+      <form method=“POST“ action=“ErfolgreicheMarktregistrierung.php”>
+         <fieldset>
+            <legend>Geben Sie Ihre gewünschten Daten ein</legend>
+            <p>
+               <label for="mid">Markt-ID: </label>
+               <input type=”text” name="marktid" id="mid">
+            </p>
+            <p>
+               <label for="mname">Marktname: </label>
+               <input type="text" name="marktname" id="mname">
+            </p>
+            <p>
+               <label for="mpasswort">Passwort: </label>
+               <input type="password" name="marktpasswort" id="mpasswort">
+            </p>
+            <p>
+               <input type="submit" name="registrieremarkt" value="registrieren">
+            </p>
+         </fieldset>
         </form>        
    </BODY>
 </HTML>
