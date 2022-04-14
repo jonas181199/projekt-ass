@@ -1,3 +1,9 @@
+<?php
+
+include_once 'includes/dbh.inc.php'
+
+?>
+
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>
@@ -10,7 +16,7 @@
    <BODY>
       <!-- HTML-Körper -->
       <h1>Getränkemarkt-Portal</h1>
-      <form method=“POST“ action=“Markt.php”>
+      <form action="Markt.php" method="POST" >
          <fieldset>
             <legend>Bitte die Anmeldedaten für Ihren Markt eingeben</legend>
             <p>
@@ -27,7 +33,7 @@
          </fieldset>
       </form>
 <br>
-      <form action="Marktregistrierung.php">
+      <form action="../projekt-ass/Marktregistrierung.php">
          <fieldset>
             <legend>Wenn Sie neu auf dem Portal sind, können Sie sich hier registrieren</legend>
             <p>

@@ -20,7 +20,7 @@
          <input type="submit" value="Lagerverwaltung">
          </p>
       </form>
-      <form action="Getraenkeerfassen.php" method="POST">
+      <form action="Auswertung.php" method="POST">
          <p>
          <input type="submit" value="Auswertung">
          </p>
