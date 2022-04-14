@@ -22,7 +22,7 @@
          !isset($_POST['marktpasswort']) || strlen($_POST['marktpasswort']) == 0){
             echo "Bitte füllen Sie die erforderlichen Felder aus!";
       } else {
-         //Prüfen, ob Markt-ID schon vergeben
+         /*//Prüfen, ob Markt-ID schon vergeben
          $mid = $db->query("select mid from markt");
          while(($s = $mid->fetch_object()) != false){
             if($s == $_POST['marktid']){
@@ -35,16 +35,29 @@
                   if($s == $_POST['marktname']){
                      echo "Der Marktname ist bereits vergeben."
                   }
-                  else{
-
+                  else {*/
+                     $db = new mysqli("localhost", "root", "", "getraenkeshop_ass");
+                     //$sql = "insert into markt values (, ', '$_POST['marktpasswort']')";
+                     $sql = "insert into markt values ('" . $_POST['marktid']. "', '" . $_POST['marktpasswort']. "', '" . $_POST['marktname']. "')";
+                           if ($db->query($sql) == false){
+                              echo "fehler";
+                           echo $db->error;
+                           }
+                           else {
+                              echo "worked";
+                           }
+                           $db->close();
+                                 
                   }
-               }
-            }  
+     /*          }
+            }
          }
-      } 
+      }
+           */ 
+  
       
 
-      $db = new mysqli($host, $user, $password, $db);
+      
                
       
 
