@@ -21,7 +21,7 @@ include_once 'includes/dbh.inc.php'
             <legend>Bitte die Anmeldedaten für Ihren Markt eingeben</legend>
             <p>
                <label for="mid">Markt-ID: </label>
-               <input type=”text” name="marktid" id="mid">
+               <input type="text" name="marktid" id="mid">
             </p>
             <p>
                <label for="mpasswort">Passwort: </label>

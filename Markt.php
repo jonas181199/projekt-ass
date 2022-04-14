@@ -1,3 +1,17 @@
+<?php
+session_start();
+?>
+
+<?php
+$_SESSION['marktid'] = $_POST['marktid'];
+
+if(!isset($_SESSION['marktid'])){
+   echo "Du bist nicht angemeldet.";
+} else {
+   echo "Du bist angemeldet";
+}
+?>
+
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>
@@ -25,6 +39,10 @@
          <input type="submit" value="Auswertung">
          </p>
       </form>     
+
+      
+
+
 
    </BODY>
 </HTML>

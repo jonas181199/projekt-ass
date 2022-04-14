@@ -10,12 +10,12 @@
    <BODY>
       <!-- HTML-Körper -->
       <h2>Registrieren Sie Ihren Markt</h2>
-      <form method=“POST“ action=“ErfolgreicheMarktregistrierung.php”>
+      <form method="POST" action="ErfolgreicheMarktregistrierung.php">
          <fieldset>
             <legend>Geben Sie Ihre gewünschten Daten ein</legend>
             <p>
                <label for="mid">Markt-ID: </label>
-               <input type=”text” name="marktid" id="mid">
+               <input type="text" name="marktid" id="mid">
             </p>
             <p>
                <label for="mname">Marktname: </label>
@@ -28,7 +28,7 @@
             <p>
                <input type="submit" name="registrieremarkt" value="registrieren">
             </p>
-         </fieldset>
+         </fieldset>      
         </form>        
    </BODY>
 </HTML>
