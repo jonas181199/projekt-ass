@@ -1,6 +1,6 @@
 <?php
 
-include_once 'includes/dbh.inc.php'
+include_once 'includes/dbh.inc.php';
 
 ?>
 
@@ -21,11 +21,11 @@ include_once 'includes/dbh.inc.php'
             <legend>Bitte die Anmeldedaten für Ihren Markt eingeben</legend>
             <p>
                <label for="mid">Markt-ID: </label>
-               <input type="text" name="marktid" id="mid">
+               <input type="text" name="mid" id="mid">
             </p>
             <p>
                <label for="mpasswort">Passwort: </label>
-               <input type="password" name="marktpassword" id="mpasswort">
+               <input type="password" name="mpasswort" id="mpasswort">
             </p>
             <p>
                <input type="submit" name="loginmarkt" value="Anmelden">
