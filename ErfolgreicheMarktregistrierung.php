@@ -1,3 +1,10 @@
+<?php
+
+include_once 'includes/dbh.inc.php'
+
+?>
+
+
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>
