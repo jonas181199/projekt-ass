@@ -22,10 +22,10 @@ include_once 'includes/dbh.inc.php'
          echo $_POST['kategorie'];
          echo $_POST['preis'];
 
-/*          $gname = ($conn, $_POST['gname']);
+         $gname = ($conn, $_POST['gname']);
          $ghersteller = ($conn, $_POST['ghersteller']);
          $kategorie = ($conn, $_POST['kategorie']);
-         $preis = ($conn, $_POST['preis']); */
+         $preis = ($conn, $_POST['preis']);
 
          if(isset($_POST['hinzufügen'])){
 
@@ -47,18 +47,18 @@ include_once 'includes/dbh.inc.php'
 
 
          //Prüfen, dass alle Felder befüllt
-         /* if(!isset($_POST['gname']) || strlen($_POST['gname']) == 0 || 
+         if(!isset($_POST['gname']) || strlen($_POST['gname']) == 0 || 
          !isset($_POST['ghersteller']) || strlen($_POST['ghersteller']) == 0 || 
          !isset($_POST['kategorie']) || strlen($_POST['kategorie']) == 0 ||
          !isset($_POST['preis']) || strlen($_POST['preis']) == 0){
             echo "Bitte füllen Sie die erforderlichen Felder aus!";
-         } else {
-            $gname */
+         }
+
          // Check connection
          
         
          // prepare and bind
-         /* $sql = "INSERT INTO getraenke (gname, ghersteller, kategorie, preis) VALUES (?, ?, ?, ?);";
+         $sql = "INSERT INTO getraenke (gname, ghersteller, kategorie, preis) VALUES (?, ?, ?, ?);";
          $stmt = mysqli_stmt_init($conn);
          if(!mysqli_stmt_prepare($stmt, $sql)){
             echo "SQL error";
@@ -66,16 +66,16 @@ include_once 'includes/dbh.inc.php'
             mysqli_stmt_bind_param($stmt, "sssd", $gname, $ghersteller, $kategorie, $preis);
             mysqli_stmt_execute($stmt);
          } */
-         //$stmt = $conn->prepare();
-         //$stmt->bind_param("sssd", $gname, $ghersteller, $kategorie, $preis);
+         $stmt = $conn->prepare();
+         $stmt->bind_param("sssd", $gname, $ghersteller, $kategorie, $preis);
       
          
 
          
-         //echo "New records created successfully";
+         echo "New records created successfully";
          
-         //$stmt->close();
-         //$conn->close();
+         $stmt->close();
+         $conn->close();
          ?>
 
    </BODY>
