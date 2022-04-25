@@ -1,12 +1,10 @@
 <?php
 session_start();
 include_once 'includes/dbh.inc.php'
-?>
 
-<?php
-$_SESSION['marktid'] = $_POST['marktid'];
+$_SESSION['mid'] = $_POST['mid'];
 
-if(!isset($_SESSION['marktid'])){
+if(!isset($_SESSION['mid'])){
    echo "Du bist nicht angemeldet.";
 } else {
    echo "Du bist angemeldet";
