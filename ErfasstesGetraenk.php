@@ -22,10 +22,10 @@ include_once 'includes/dbh.inc.php'
          echo $_POST['kategorie'];
          echo $_POST['preis'];
 
-         $gname = ($conn, $_POST['gname']);
+/*          $gname = ($conn, $_POST['gname']);
          $ghersteller = ($conn, $_POST['ghersteller']);
          $kategorie = ($conn, $_POST['kategorie']);
-         $preis = ($conn, $_POST['preis']);
+         $preis = ($conn, $_POST['preis']); */
 
          if(isset($_POST['hinzufügen'])){
 

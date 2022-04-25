@@ -15,15 +15,15 @@
             <legend>Geben Sie Ihre gewünschten Daten ein</legend>
             <p>
                <label for="mid">Markt-ID: </label>
-               <input type="text" name="marktid" id="mid">
+               <input type="text" name="mid" id="mid">
             </p>
             <p>
                <label for="mname">Marktname: </label>
-               <input type="text" name="marktname" id="mname">
+               <input type="text" name="mname" id="mname">
             </p>
             <p>
                <label for="mpasswort">Passwort: </label>
-               <input type="password" name="marktpasswort" id="mpasswort">
+               <input type="password" name="mpasswort" id="mpasswort">
             </p>
             <p>
                <input type="submit" name="registrieremarkt" value="registrieren">

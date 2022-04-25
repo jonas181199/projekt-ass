@@ -3,6 +3,6 @@
 $servername = "localhost";
 $dbusername = "root";
 $dbpasswort = "";
-$dbname = "getraenkshop_ass";
+$dbname = "getraenkeshop_ass";
 
 $conn = new mysqli ($servername, $dbusername, $dbpasswort, $dbname);
