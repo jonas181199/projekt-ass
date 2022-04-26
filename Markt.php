@@ -1,6 +1,6 @@
 <?php
 session_start();
-include_once 'includes/dbh.inc.php'
+include_once 'includes/dbh.inc.php';
 
 $_SESSION['mid'] = $_POST['mid'];
 
@@ -38,10 +38,5 @@ if(!isset($_SESSION['mid'])){
          <input type="submit" value="Auswertung">
          </p>
       </form>     
-
-      
-
-
-
    </BODY>
 </HTML>

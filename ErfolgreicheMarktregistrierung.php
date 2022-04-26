@@ -17,60 +17,47 @@ include_once 'includes/dbh.inc.php'
    <BODY>
       <!-- HTML-Körper -->
       <?php
+         $mid = mysqli_real_escape_string($conn, $_POST['mid']);
+         $mname = mysqli_real_escape_string($conn, $_POST['mname']);
+         $mpasswort_un = mysqli_real_escape_string($conn, $_POST['mpasswort']);
+         $mpasswort = password_hash($mpasswort_un, PASSWORD_BCRYPT);
 
-         echo $_POST['mid'];
-         echo $_POST['mname'];
-         echo $_POST['mpasswort'];
-         echo password_hash($_POST['mpasswort'], PASSWORD_BCRYPT);
-         echo strlen($_POST['mid']);
-
-      $mid = mysqli_real_escape_string($conn, $_POST['mid']);
-      $mname = mysqli_real_escape_string($conn, $_POST['mname']);
-      $mpasswort_un = mysqli_real_escape_string($conn, $_POST['mpasswort']);
-      $mpasswort = password_hash($mpasswort_un, PASSWORD_BCRYPT);
-
-      //Prüfen, ob alle Felder befüllt
-      if(!isset($_POST['mid']) || strlen($_POST['mid']) == 0 || 
-         !isset($_POST['mname']) || strlen($_POST['mname']) == 0 || 
-         !isset($_POST['mpasswort']) || strlen($_POST['mpasswort']) == 0){
-            echo "Bitte füllen Sie die erforderlichen Felder aus!";
-      }/* else {
-         //Prüfen, ob mid schon vergeben
-         $mid = $db->query("select mid from markt");
-         while(($s = $mid->fetch_object()) != false){
-            if($s == $_POST['mid']){
-               echo "Die Markt-ID ist bereits vergeben.";
+         //Prüfen, ob alle Felder befüllt
+         if(!isset($_POST['mid']) || strlen($_POST['mid']) == 0 || 
+            !isset($_POST['mname']) || strlen($_POST['mname']) == 0 || 
+            !isset($_POST['mpasswort']) || strlen($_POST['mpasswort']) == 0){
+               echo "Bitte füllen Sie die erforderlichen Felder aus!";
+               return;
+         } 
+      
+         //Prüfen, ob Markt-ID schon vergeben
+         $mids = $conn->query("select mid from markt");
+         while(($s = $mids->fetch_object()) != false){
+            if($s->mid == $_POST['mid']){
+               echo "Die Markt-ID ist bereits vergeben!";
+               return;
             }
-            else {
-               //Prüfen, ob mname schon vergeben
-               $mn = $db->query("select mname from markt");
-               while(($s = $mn->fetch_object()) != false){
-                  if($s == $_POST['mname']){
-                     echo "Der mname ist bereits vergeben.";
-                  }*/
-                  else {
-                     $db = new mysqli("localhost", "root", "", "getraenkeshop_ass");
-                     //$sql = "insert into markt values (, ', '$_POST['mpasswort']')";
-                     $sql = "insert into markt values ('" . $mid. "', '" . $mpasswort. "', '" . $mname. "')";
-                        if ($db->query($sql) == false){
-                           echo "fehler";
-                           echo $db->error;
-                        } else {
-                           echo "worked";
-                        }
-                        $db->close();
-                                 
-                  }
-     //          } 
-       //     }
-         //}
-      //}
+         }
 
+         //Prüfen, ob mname schon vergeben
+         $mn = $conn->query("select mname from markt");
+         while(($s = $mn->fetch_object()) != false){
+            if($s->mname == $_POST['mname']){
+               echo "Der Marktname ist bereits vergeben!";
+               return;
+            }
+         }
 
+         $sql = "insert into markt values ('" . $mid. "', '" . $mpasswort. "', '" . $mname. "')";
+         if ($conn->query($sql) == false){
+            echo "fehler";
+            echo $conn->error;
+         }
+         else {
+            echo "worked";
+         }
+         $conn->close();
       ?>
-
-
-
       <p>Ihr Markt wurde erfolgreich erstellt.</p>
    </BODY>
 </HTML>
