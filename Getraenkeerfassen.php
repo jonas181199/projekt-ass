@@ -30,16 +30,16 @@ include_once 'includes/dbh.inc.php'
                <label for="kategorie">Kategorie: </label>
                   <select name="kategorie" id="kategorie">
                      <option value="Wasser">Wasser</option>
-                     <option value="saft">Saft</option>
-                     <option value="limonade">Limonade</option>
-                     <option value="wein">Wein</option>
-                     <option value="bier">Bier</option>
-                     <option value="sonstiges">Sonstiges</option>
+                     <option value="Saft">Saft</option>
+                     <option value="Limonade">Limonade</option>
+                     <option value="Wein">Wein</option>
+                     <option value="Bier">Bier</option>
+                     <option value="Sonstiges">Sonstiges</option>
                   </select>
             </p>
             <p>
                <label for="preis">Preis: </label>
-               <input type="number" min="1" step="any" name="preis" id="preis">
+               <input type="number" min="0.00" step="any" name="preis" id="preis">
             </p>
             <p>
                <input type="submit" name="ghinzufuegen" value="hinzufügen">
