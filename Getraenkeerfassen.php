@@ -61,6 +61,11 @@ include_once 'includes/dbh.inc.php'
       }
    }
    ?>
+
+   <?php
+   if(empty($data))
+   echo("Es sind noch keine Getränke vorhanden.");
+   ?>
    <div class="row">
       <h4>Anzahl der Getränke: <?php echo count($data); ?></h4>
       <table border="2" cellspacing=2 cellpadding=5>
