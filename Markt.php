@@ -2,9 +2,9 @@
 
    include_once 'includes/dbh.inc.php';
    session_start();
-   $_SESSION['mid'] = $_POST['mid'];
 
    if(!isset($_SESSION['mid'])){
+      $_SESSION['mid'] = $_POST['mid'];
       echo "Du bist nicht angemeldet.";
    } else {
       echo "Du bist angemeldet";
@@ -25,9 +25,6 @@
    </HEAD>
    <BODY>
       <?php
-
-      $registriert = $_POST['registrieremarkt'];
-
       if (isset($_POST['loginmarkt'])){
          $mid = mysqli_real_escape_string($conn, $_POST['mid']);
 
@@ -65,7 +62,7 @@
             return;
          } 
       }
-      elseif($registriert == "registrieren"){
+      elseif(isset($_POST['registrieremarkt'])){
          $mid = mysqli_real_escape_string($conn, $_POST['mid']);
          $mname = mysqli_real_escape_string($conn, $_POST['mname']);
          $mpasswort_un = mysqli_real_escape_string($conn, $_POST['mpasswort']);
