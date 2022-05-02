@@ -23,8 +23,6 @@
    <BODY>
       <?php
          $mid = mysqli_real_escape_string($conn, $_POST['mid']);
-         $mpasswort_un = mysqli_real_escape_string($conn, $_POST['mpasswort']);
-         $mpasswort = password_hash($mpasswort_un, PASSWORD_BCRYPT);
 
          //Prüfen, ob alle Felder befüllt
          if(!isset($_POST['mid']) || strlen($_POST['mid']) == 0 || 
@@ -39,7 +37,7 @@
             $mids = $db->query("select mid from markt");
             while(($s = $mids->fetch_object()) != false){
                if($s->mid == $_POST['mid']){
-                  echo "Die Markt-ID existiert!";
+                  // echo "Die Markt-ID existiert!";
                   return true;
                }
             }
@@ -47,16 +45,14 @@
          }
          
          if (check_id() == false){
+            echo "Die Markt-ID existiert nicht!";
             return;
          }
 
          //Prüfen, ob Markt-ID und Passwort übereinstimmen
          $markt = $conn->query("select mpasswort from markt where mid = '$mid'");
          $s = $markt->fetch_object();
-         echo $s->mpasswort;
-         echo "\n";
-         echo $mpasswort;
-         if($s->mpasswort != $mpasswort){
+         if(password_verify($_POST['mpasswort'], $s->mpasswort) == false){
             echo "ID und Passwort stimmen nicht überein!";
             return;
          } 
