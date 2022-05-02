@@ -62,15 +62,16 @@ include_once 'includes/dbh.inc.php'
    }
    ?>
 
-   <?php
-   if(empty($data))
-   echo("Es sind noch keine Getränke vorhanden.");
-   else{
-      foreach($data as $content);
-   }
-   ?>
    <div class="row">
-      <h4>Anzahl der Getränke: <?php echo count($data); ?></h4>
+      <h4>Anzahl der Getränke: 
+         <?php
+            if(empty($data)){
+               echo("Es sind noch keine Getränke vorhanden.");
+            }
+            else{
+               echo count($data); 
+            }
+         ?></h4>
       <table border="2" cellspacing=2 cellpadding=5>
          <thead>
             <tr>
@@ -82,6 +83,9 @@ include_once 'includes/dbh.inc.php'
          </thead>
          <tbody>
             <?php
+            if(empty($data)){
+                  echo("Es kann noch keine Tabelle erzeugt werden.");
+            } else {
             foreach ($data as $content){
             
             ?>
@@ -108,7 +112,7 @@ include_once 'includes/dbh.inc.php'
                </td>
             </tr>
             <?php
-            }
+            }}
             ?>
          </tbody>
       </table>
