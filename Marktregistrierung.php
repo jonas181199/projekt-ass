@@ -1,3 +1,15 @@
+<?php
+
+$_SESSION['mid'] = $_POST['mid'];
+
+if(!isset($_SESSION['mid'])){
+   echo "Du bist nicht angemeldet.";
+} else {
+   echo "Du bist angemeldet";
+}
+
+?>
+
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>

@@ -54,10 +54,15 @@ include_once 'includes/dbh.inc.php'
             echo $conn->error;
          }
          else {
-            echo "worked";
+            echo "Ihr Markt wurde erfolgreich erstellt.";
          }
          $conn->close();
       ?>
-      <p>Ihr Markt wurde erfolgreich erstellt.</p>
+      
+      <form action="Markt.php" method="POST" >
+         <p>
+            <input type="submit" name="gehezumarkt" value="Gelangen Sie hier zu den Funktionen Ihres Markts">
+         </p>
+      </form>
    </BODY>
 </HTML>

@@ -77,6 +77,7 @@
          <p>
          <input type="submit" value="Auswertung">
          </p>
-      </form>     
+      </form>
+      <a href="logout.php">Logout</a>     
    </BODY>
 </HTML>
