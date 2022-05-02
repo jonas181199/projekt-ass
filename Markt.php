@@ -48,6 +48,7 @@
             echo "Die Markt-ID existiert nicht!";
             return;
          }
+         
 
          //Prüfen, ob Markt-ID und Passwort übereinstimmen
          $markt = $conn->query("select mpasswort from markt where mid = '$mid'");
