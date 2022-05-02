@@ -1,14 +1,14 @@
 <?php
-session_start();
-include_once 'includes/dbh.inc.php';
+   session_start();
+   include_once 'includes/dbh.inc.php';
 
-$_SESSION['mid'] = $_POST['mid'];
+   $_SESSION['mid'] = $_POST['mid'];
 
-if(!isset($_SESSION['mid'])){
-   echo "Du bist nicht angemeldet.";
-} else {
-   echo "Du bist angemeldet";
-}
+   if(!isset($_SESSION['mid'])){
+      echo "Du bist nicht angemeldet.";
+   } else {
+      echo "Du bist angemeldet";
+   }
 ?>
 
 <!DOCTYPE HTML>
@@ -21,7 +21,47 @@ if(!isset($_SESSION['mid'])){
       <title>Die Möglichkeiten im Portal</title>
    </HEAD>
    <BODY>
-      <!-- HTML-Körper -->
+      <?php
+         $mid = mysqli_real_escape_string($conn, $_POST['mid']);
+         $mpasswort_un = mysqli_real_escape_string($conn, $_POST['mpasswort']);
+         $mpasswort = password_hash($mpasswort_un, PASSWORD_BCRYPT);
+
+         //Prüfen, ob alle Felder befüllt
+         if(!isset($_POST['mid']) || strlen($_POST['mid']) == 0 || 
+            !isset($_POST['mpasswort']) || strlen($_POST['mpasswort']) == 0){
+               echo "Bitte füllen Sie die erforderlichen Felder aus!";
+               return;
+         } 
+   
+         //Prüfen, ob Markt-ID existiert
+         function check_id(): bool {
+            $db = new mysqli ("localhost", "root", "", "getraenkeshop_ass");
+            $mids = $db->query("select mid from markt");
+            while(($s = $mids->fetch_object()) != false){
+               if($s->mid == $_POST['mid']){
+                  echo "Die Markt-ID existiert!";
+                  return true;
+               }
+            }
+            return false;
+         }
+         
+         if (check_id() == false){
+            return;
+         }
+
+         //Prüfen, ob Markt-ID und Passwort übereinstimmen
+         $markt = $conn->query("select mpasswort from markt where mid = '$mid'");
+         $s = $markt->fetch_object();
+         echo $s->mpasswort;
+         echo "\n";
+         echo $mpasswort;
+         if($s->mpasswort != $mpasswort){
+            echo "ID und Passwort stimmen nicht überein!";
+            return;
+         } 
+      ?>
+
       <h2>Die Möglichkeiten in Ihrem Markt-Portal</h2>
       <form action="Getraenkeerfassen.php" method="POST">
          <p>
