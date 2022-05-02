@@ -1,6 +1,6 @@
 <!-- Jonas Schirm -->
 <?php
-session_start();
+
 include_once 'includes/dbh.inc.php'
 
 ?>
@@ -17,6 +17,9 @@ include_once 'includes/dbh.inc.php'
    <BODY>
       <!-- HTML-Körper -->
       <h1>Getränkeverwaltung</h1>
+      <p>
+         <a href="Markt.php">Zurück zum Markt</a>
+      </p>
       <form method="POST" action="ErfasstesGetraenk.php">
          <fieldset>
             <legend>Fügen Sie ein neues Getränk hinzu</legend>

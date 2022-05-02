@@ -1,8 +1,8 @@
 <!-- Dies ist eine gemeinsame Leistung der Gruppe -->
 <?php
-session_start();
 
-include_once 'includes/dbh.inc.php'
+include_once 'includes/dbh.inc.php';
+
 
 ?>
 
@@ -18,7 +18,7 @@ include_once 'includes/dbh.inc.php'
    <BODY>
       <!-- HTML-Körper -->
       <h2>Registrieren Sie Ihren Markt</h2>
-      <form method="POST" action="ErfolgreicheMarktregistrierung.php">
+      <form method="POST" action="Markt.php">
          <fieldset>
             <legend>Geben Sie Ihre gewünschten Daten ein</legend>
             <p>
