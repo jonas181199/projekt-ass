@@ -1,4 +1,6 @@
+<!-- Dies ist eine gemeinsame Leistung der Gruppe -->
 <?php
+session_start();
 
 include_once 'includes/dbh.inc.php'
 
