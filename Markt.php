@@ -7,10 +7,8 @@
       $_SESSION['mid'] = $_POST['mid'];
       echo "Du bist nicht angemeldet.";
    } else {
-      echo "Du bist angemeldet";
+      echo "Du bist angemeldet <br><br>";
    }
-      
-   
 
 ?>
 

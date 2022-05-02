@@ -65,6 +65,9 @@ include_once 'includes/dbh.inc.php'
    <?php
    if(empty($data))
    echo("Es sind noch keine Getränke vorhanden.");
+   else{
+      foreach($data as $content);
+   }
    ?>
    <div class="row">
       <h4>Anzahl der Getränke: <?php echo count($data); ?></h4>
