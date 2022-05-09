@@ -106,7 +106,7 @@
       ?>
 
       <h2>Die Möglichkeiten in Ihrem Markt-Portal</h2>
-      <form action="../Getränk/Getraenkeerfassen.php" method="POST">
+      <form action="../Getraenk/Getraenkeerfassen.php" method="POST">
          <p>
          <input type="submit" value="Getraenke erfassen">
          </p>

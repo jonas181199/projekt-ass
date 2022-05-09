@@ -20,7 +20,7 @@
       <h1> Lagerverwaltung </h1>
 
       <p>
-         <a href="Markt.php">Zurück zum Markt</a>
+         <a href="../Anmeldung/Markt.php">Zurück zum Markt</a>
       </p>
 
       <!-- Felder befüllen -->
