@@ -1,6 +1,7 @@
+<!-- Dies ist eine gemeinsame Leistung der Gruppe -->
 <?php
 
-include_once 'includes/dbh.inc.php';
+include_once '../includes/dbh.inc.php';
 
 
 ?>
@@ -17,7 +18,7 @@ include_once 'includes/dbh.inc.php';
    <BODY>
       <!-- HTML-Körper -->
       <h1>Getränkemarkt-Portal</h1>
-      <form action="Markt.php" method="POST" >
+      <form action="../Markt.php" method="POST" >
          <fieldset>
             <legend>Bitte die Anmeldedaten für Ihren Markt eingeben</legend>
             <p>
