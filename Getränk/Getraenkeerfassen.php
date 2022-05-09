@@ -18,7 +18,7 @@ include_once '../includes/dbh.inc.php'
       <!-- HTML-Körper -->
       <h1>Getränkeverwaltung</h1>
       <p>
-         <a href="Markt.php">Zurück zum Markt</a>
+         <a href="../Anmeldung/Markt.php">Zurück zum Markt</a>
       </p>
       <form method="POST" action="ErfasstesGetraenk.php">
          <fieldset>

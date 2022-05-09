@@ -51,7 +51,7 @@ include_once '../includes/dbh.inc.php'
          </p>
       </form>
 
-      <form action="Markt.php">
+      <form action="../Anmeldung/Markt.php">
          <p>
             <input type="submit" name="markt" value="Zurück zu den Funktionen des Markts">
          </p>

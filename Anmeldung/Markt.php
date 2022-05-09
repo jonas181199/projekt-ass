@@ -106,17 +106,17 @@
       ?>
 
       <h2>Die Möglichkeiten in Ihrem Markt-Portal</h2>
-      <form action="Getränk/Getraenkeerfassen.php" method="POST">
+      <form action="../Getränk/Getraenkeerfassen.php" method="POST">
          <p>
          <input type="submit" value="Getraenke erfassen">
          </p>
       </form>
-      <form action="Lager/Lagerverwaltung.php" method="POST">
+      <form action="../Lager/Lagerverwaltung.php" method="POST">
          <p>
          <input type="submit" value="Lagerverwaltung">
          </p>
       </form>
-      <form action="Auswertung/Auswertung.php" method="POST">
+      <form action="../Auswertung/Auswertung.php" method="POST">
          <p>
          <input type="submit" value="Auswertung">
          </p>

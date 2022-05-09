@@ -28,7 +28,7 @@
          </fieldset>
       </form>
       <br>
-      <form action="../projekt-ass/Marktregistrierung.php">
+      <form action="Kundenregistrierung.php">
          <fieldset>
             <legend>Wenn Sie neu auf dem Portal sind, können Sie sich hier registrieren</legend>
             <p>
