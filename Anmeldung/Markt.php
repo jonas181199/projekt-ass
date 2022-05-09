@@ -1,12 +1,13 @@
+<!-- Dies ist eine gemeinsame Leistung der Gruppe -->
 <?php
 
-   include_once 'includes/dbh.inc.php';
+   include_once '../includes/dbh.inc.php';
    session_start();
 
    if(!isset($_SESSION['mid'])){
       $_SESSION['mid'] = $_POST['mid'];
    } else {
-      echo "Du bist angemeldet";
+      echo "Sie sind angemeldet!";
    }
 
 ?>
@@ -105,17 +106,17 @@
       ?>
 
       <h2>Die Möglichkeiten in Ihrem Markt-Portal</h2>
-      <form action="Getraenkeerfassen.php" method="POST">
+      <form action="Getränk/Getraenkeerfassen.php" method="POST">
          <p>
          <input type="submit" value="Getraenke erfassen">
          </p>
       </form>
-      <form action="Lagerverwaltung.php" method="POST">
+      <form action="Lager/Lagerverwaltung.php" method="POST">
          <p>
          <input type="submit" value="Lagerverwaltung">
          </p>
       </form>
-      <form action="Auswertung.php" method="POST">
+      <form action="Auswertung/Auswertung.php" method="POST">
          <p>
          <input type="submit" value="Auswertung">
          </p>
