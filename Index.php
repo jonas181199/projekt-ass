@@ -28,11 +28,11 @@
          </fieldset>
       </form>
       <br>
-      <form action="../projekt-ass/Marktanmeldung.php">
+      <form action="Anmeldung/Marktanmeldung.php">
          <fieldset>
             <legend>Hier können Sie sich an ihrem Markt anmelden</legend>
             <p>
-               <a href="Marktanmeldung.php">Als Markt anmelden</a> 
+               <a href="Anmeldung/Marktanmeldung.php">Als Markt anmelden</a> 
             </p>
          </fieldset>
       </form>
