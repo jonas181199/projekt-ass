@@ -1,6 +1,7 @@
+<!-- Noah Schöne -->
 <?php
  
- include_once 'includes/dbh.inc.php';
+ include_once '../includes/dbh.inc.php';
  session_start();
 
 ?>
@@ -22,16 +23,34 @@
          <a href="Markt.php">Zurück zum Markt</a>
       </p>
 
+      <!-- Felder befüllen -->
       <form method="POST" action="HinzugefuegterLagerbestand.php">
          <fieldset>
             <legend> Lagerbestand anpassen </legend>
             <p>
-               <label for="gname">Getraenkename: </label>
-               <input type="text" name="gname" id="gname">
-            </p>
-            <p>
-               <label for="ghersteller">Getraenkehersteller: </label>
-               <input type="text" name="ghersteller" id="ghersteller">
+               <label for="gname">Getränkename: </label>
+               <select name="gname">
+                  <?php
+                        $getraenke  = $conn->query("select distinct gname from getraenke");
+                        while(($s = $getraenke->fetch_object()) != false){
+                    ?>  
+                        <option><?php echo $s->gname; ?></option>
+                    <?php      
+                        }
+                    ?>
+               </select> 
+
+               <label for="ghersteller">Hersteller: </label>
+               <select name="ghersteller">
+                   <?php
+                     $hersteller  = $conn->query("select distinct ghersteller from getraenke");
+                        while(($s = $hersteller->fetch_object()) != false){
+                   ?>  
+                     <option><?php echo $s->ghersteller; ?></option>
+                   <?php      
+                       }
+                   ?>
+               </select>
             </p>
             <p>
                <label for="lagerbest">Lagerbestand: </label>
@@ -44,6 +63,7 @@
       </form>
 
 
+      <!-- Lagertabelle -->
       <?php
 
          $mid = mysqli_real_escape_string($conn, $_SESSION['mid']);
@@ -57,6 +77,7 @@
       ?>
       <div class=row> 
 
+      
       <table border="2" cellspacing=2 cellpadding=5>
          <thead>
             <tr>
