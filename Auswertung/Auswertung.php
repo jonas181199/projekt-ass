@@ -25,16 +25,6 @@
                <input type="submit" name="auswerten" value="Auswertung starten">
             </p>
          </fieldset>
-      </form>
-      
-
-      
-               <p>
-                  <a href="KategorieAuswertung.php">Zur Auswertung nach Kategorie</a> 
-               </p>
-
-
-
-
+      </form> 
    </BODY>
 </HTML>
