@@ -28,22 +28,21 @@ include_once 'includes/dbh.inc.php'
                return;
          }
 
-         //$sql = "call insertgetraenk('$ghersteller', '$gname', '$kategorie', $preis)";
-         //echo $sql;
+         $sql = "SELECT insertgetraenke('$ghersteller', '$gname', '$kategorie', $preis)";
 
-         $sql = "insert into getraenke (gname, ghersteller, kategorie, preis) values ('" . $gname. "', '" . $ghersteller. "', '" . $kategorie. "', '" . $preis. "')";   */
-         if ($conn->query($sql) == false){
-            echo "Fehler <br>";
-            if(mysqli_errno($conn) == 1062){ //Catch Duplicate Key
-               echo "Das Getränk ist bereits vorhanden";
-            } else {
-               echo $conn->error;
-            }
-         }
-         else {
-            echo "Das Getränk wurde erfolgreich der Datenbank hinzugefügt";
-         }
-         $conn->close();
+         // /* $sql = "insert into getraenke (gname, ghersteller, kategorie, preis) values ('" . $gname. "', '" . $ghersteller. "', '" . $kategorie. "', '" . $preis. "')";   */
+         // if ($conn->query($sql) == false){
+         //    echo "Fehler <br>";
+         //    if(mysqli_errno($conn) == 1062){ //Catch Duplicate Key
+         //       echo "Das Getränk ist bereits vorhanden";
+         //    } else {
+         //       echo $conn->error;
+         //    }
+         // }
+         // else {
+         //    echo "Das Getränk wurde erfolgreich der Datenbank hinzugefügt";
+         // }
+         // $conn->close(); */
          ?>
 
       <form action="Getraenkeerfassen.php">
