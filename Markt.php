@@ -5,9 +5,8 @@
 
    if(!isset($_SESSION['mid'])){
       $_SESSION['mid'] = $_POST['mid'];
-      echo "Du bist nicht angemeldet.";
    } else {
-      echo "Du bist angemeldet <br><br>";
+      echo "Du bist angemeldet";
    }
 
 ?>

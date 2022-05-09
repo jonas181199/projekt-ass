@@ -28,17 +28,17 @@ include_once 'includes/dbh.inc.php'
                return;
          }
 
-         $sql = "call insertgetraenk('$ghersteller', '$gname', '$kategorie', $preis)";
-         echo $sql;
+         //$sql = "call insertgetraenk('$ghersteller', '$gname', '$kategorie', $preis)";
+         //echo $sql;
 
-         /* $sql = "insert into getraenke (gname, ghersteller, kategorie, preis) values ('" . $gname. "', '" . $ghersteller. "', '" . $kategorie. "', '" . $preis. "')";   */
+         $sql = "insert into getraenke (gname, ghersteller, kategorie, preis) values ('" . $gname. "', '" . $ghersteller. "', '" . $kategorie. "', '" . $preis. "')";   */
          if ($conn->query($sql) == false){
-/*             echo "Fehler <br>";
+            echo "Fehler <br>";
             if(mysqli_errno($conn) == 1062){ //Catch Duplicate Key
                echo "Das Getränk ist bereits vorhanden";
-            }  else{*/
+            } else {
                echo $conn->error;
-            //}
+            }
          }
          else {
             echo "Das Getränk wurde erfolgreich der Datenbank hinzugefügt";
