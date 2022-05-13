@@ -1,5 +1,13 @@
 <?php
-   include_once '../includes/dbh.inc.php';
+    include_once '../includes/dbh.inc.php';
+
+    session_start();
+    if(!isset($_SESSION['anzPosition'])){
+        $_SESSION['anzPosition'] = $_POST['anzPosition'];
+    } 
+    if(!isset($_SESSION['mid'])){
+        $_SESSION['mid'] = $_POST['mid'];
+    } 
 ?>
 
 <!DOCTYPE HTML>
@@ -14,9 +22,9 @@
       <form action="BestellungPrüfen.php" method="POST" >
          <fieldset>
             <legend>Bitte die Daten für Ihre Bestellung eingeben</legend>
-            <?php              
-                for ($i = 0; $i < $_POST['anzPosition']; $i++){
-                    echo "Bestellposition " . $i+1;
+            <?php          
+                for ($i = 1; $i <= $_SESSION['anzPosition']; $i++){
+                    echo "Bestellposition " . $i;
                     $gname = "gname" . $i;
                     $hname = "hname" . $i;
                     $menge = "menge" . $i;
@@ -52,10 +60,6 @@
             <?php
                 }
             ?>
-            <p>
-                <input type="hidden" name="anzPosition" id="anzPosition" value="<?php echo $_POST['anzPosition']; ?>">
-                <input type="hidden" name="mid" id="mid" value="<?php echo $_POST['mid']; ?>">
-            </p>
             <p>
                <input type="submit" name="bPrüfen" value="Bestellung prüfen">
             </p>

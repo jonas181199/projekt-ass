@@ -1,12 +1,11 @@
 <?php
    include_once '../includes/dbh.inc.php';
-   session_start();
 
+   session_start();
    if(!isset($_SESSION['email'])){
       $_SESSION['email'] = $_POST['email'];
-      echo "Du bist nicht angemeldet.";
    } else {
-      echo "Du bist angemeldet <br><br>";
+      echo "Du bist bereits angemeldet!";
    }
 ?>
 
@@ -103,7 +102,58 @@
             $conn->close();
          }
 
+         //Bestellung in die Datenbank einfügen
+         $bestellnr  = ($conn->query("select count(*) as bestnr from bestellung"));
+         $abestellnr = $bestellnr->fetch_object();
+         $nbestellnr = $abestellnr->bestnr + 1; 
+         $bestdatum  = date('Y-m-d');
+
+         $sql = "insert into bestellung values ('" . $nbestellnr. "', '" . $bestdatum. "', '" . $email. "', '" . $_SESSION['mid']. "')";
+         if ($conn->query($sql) == false){
+            echo "Die Bestellung konnte nicht durchgeführt werden!";
+            echo $conn->error;
+            $conn->close();
+            return;
+         }
+
+         //Sämtliche Bestellpositionen durchgehen
+         for($i = 1; $i <= $_SESSION['anzPosition']; $i++){
+          
+            $sgname   = "gname" . $i;
+            $shname   = "hname" . $i;
+            $smenge   = "menge" . $i;
+            $sbestand = "sbestand" . $i;
+
+            //Bestellposition in die Datenbank einfügen
+            $sql = "insert into bestellpos values ('" . $_SESSION[$smenge]. "', '" . $i. "', '" . $nbestellnr. "', '" . $_SESSION[$shname]. "', '" . $_SESSION[$sgname]. "')";
+            if ($conn->query($sql) == false){
+               echo "Die Bestellung konnte nicht durchgeführt werden!";
+               echo $conn->error;
+               $conn->close();
+               return;
+            }
+
+            //Bestand im Lager aktualisieren
+            $sql = "replace into lager (mid, gname, ghersteller, bestand) values ('" . $_SESSION['mid'] . "', '" . $_SESSION[$sgname] . "', '" . $_SESSION[$shname] . "', '" . $_SESSION[$sbestand] . "')";
+            echo $sql;
+            if ($conn->query($sql) == false){
+               echo "Die Bestellung konnte nicht durchgeführt werden!";
+               echo $conn->error;
+               $conn->close();
+               return;
+            }
+         }
          
+         echo "Die Bestellung war erfolgreich!";         
+         $conn->close();             
       ?>
+
+      <form action="Kundenregistrierung.php">
+         <fieldset>
+            <p>
+               <a href="../index.php">Zurück zum Hauptmenü</a> 
+            </p>
+         </fieldset>
+      </form>
    </BODY>
 </HTML>

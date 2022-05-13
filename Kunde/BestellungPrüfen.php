@@ -1,5 +1,6 @@
 <?php
    include_once '../includes/dbh.inc.php';
+   session_start();
 ?>
 
 <!DOCTYPE HTML>
@@ -11,17 +12,18 @@
       <title>Startseite</title>
    </HEAD>
    <BODY>
-      <?php
-         for ($i = 0; $i < $_POST['anzPosition']; $i++){
+      <?php      
+         for ($i = 1; $i <= $_SESSION['anzPosition']; $i++){
 
-            $sgname = "gname" . $i;
-            $shname = "hname" . $i;
-            $smenge = "menge" . $i;
+            $sgname   = "gname" . $i;
+            $shname   = "hname" . $i;
+            $smenge   = "menge" . $i;
+            $sbestand = "sbestand" . $i;
+            $smid     = "mid";
             
-            $gname = mysqli_real_escape_string($conn, $_POST[$sgname]);
-            $hname = mysqli_real_escape_string($conn, $_POST[$shname]);
-            $menge = mysqli_real_escape_string($conn, $_POST[$smenge]);
-            $mid   = mysqli_real_escape_string($conn, $_POST['mid']);
+            $_SESSION[$sgname]       = mysqli_real_escape_string($conn, $_POST[$sgname]);
+            $_SESSION[$shname]       = mysqli_real_escape_string($conn, $_POST[$shname]);
+            $_SESSION[$smenge]       = mysqli_real_escape_string($conn, $_POST[$smenge]);
 
             //Prüfen, ob alle Felder befüllt
             if(!isset($_POST[$sgname]) || strlen($_POST[$sgname]) == 0 || 
@@ -34,7 +36,7 @@
             }
 
             //Prüfen ob Getränk-Hersteller Kombination existiert
-            $getraenk = $conn->query("select * from getraenke where gname = '$gname' AND ghersteller = '$hname'");
+            $getraenk = $conn->query("select * from getraenke where gname = '$_SESSION[$sgname]' AND ghersteller = '$_SESSION[$shname]'");
             while($s = $getraenk->fetch_object()){
                $data[] = $s;
             }
@@ -45,15 +47,22 @@
             } 
             
             //Bestand prüfen
-            $bestand = $conn->query("select bestand from lager where gname = '$gname' AND ghersteller = '$hname' AND mid = '$mid'");
+            if ($smenge <= 0){
+               echo "Bestellposition " . $i . ": ";
+               echo "Die Bestellmenge darf nicht Null sein!";
+               return;
+            }
+
+            $bestand = $conn->query("select bestand from lager where gname = '$_SESSION[$sgname]' AND ghersteller = '$_SESSION[$shname]' AND mid = '$_SESSION[$smid]'");
             while($s = $bestand->fetch_object()){
                $b[] = $s;
-               if ($s->bestand < $menge){
+               if ($s->bestand <  $_SESSION[$smenge]){
                   echo "Bestellposition" . $i . ": ";
                   echo "Die eingegebene Menge liegt über dem Lagerbestand!";
                   echo "Aktueller Lagerbestand: " . $s->bestand;
                   return;
                }
+               $_SESSION[$sbestand] = $s->bestand - $_SESSION[$smenge];
             }
             if(empty($b)){
                echo "Bestellposition" . $i . ": ";
@@ -64,23 +73,17 @@
          }  
       ?>
 
+      <h2>Die Prüfung war erfolgreich!</h2>
       <form action="Kundenanmeldung.php" method="POST" >
          <fieldset>
             <legend>Bestellung abschließen</legend>
-            <p>              
-               <input type="hidden" name="anzPosition" id="anzPosition" value="<?php echo $_POST['anzPosition']; ?>">
-               <input type="hidden" name="mid" id="mid" value="<?php echo $_POST['mid']; ?>">
-            </p>
             <p>
                <input type="submit" name="babschließen" value="Bestellung Abschließen">
             </p>
          </fieldset>
       </form>
-
-      <form action="Bestellung.php">
-         <p>
-            <input type="submit" name="bestellung" value="Zurück zur Bestellung">
-         </p>
-      </form>
+      <p>
+         <a href="Bestellung.php">Zurück zur Bestellung</a>
+      </p>
    </BODY>
 </HTML>

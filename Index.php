@@ -15,7 +15,7 @@
          <fieldset>
             <legend>Bitte die Daten für Ihre Bestellung eingeben</legend>
             <p>
-               <label for="mid">Marktname: </label>
+               <label for="mid">Markt-ID: </label>
                <input type="text" name="mid" id="mid">
             </p>
             <p>
