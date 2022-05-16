@@ -35,7 +35,7 @@ include_once '../includes/dbh.inc.php';
          </fieldset>
       </form>
 <br>
-      <form action="Marktregistrierung.php">
+      <form action="../projekt-ass/Marktregistrierung.php">
          <fieldset>
             <legend>Wenn Sie neu auf dem Portal sind, können Sie sich hier registrieren</legend>
             <p>

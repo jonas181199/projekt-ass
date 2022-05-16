@@ -51,71 +51,71 @@ include_once '../includes/dbh.inc.php'
             </p>
          </fieldset>      
       </form>
-   <br><br>
-   <h2>Die Getränke der Datenbank</h2>
-   <?php
-   $sql = "SELECT * FROM getraenke ORDER BY gname";
-   if($result = $conn->query($sql)){
-      while($ds = $result->fetch_object()){
-         $data[] = $ds;
-      }
-   }
-   ?>
+      <br><br>
 
-   <div class="row">
-      <h4>Anzahl der Getränke: 
-         <?php
-            if(empty($data)){
-               echo("Es sind noch keine Getränke vorhanden.");
+      <h2>Die Getränke der Datenbank</h2>
+      <?php
+         $sql = "SELECT * FROM getraenke ORDER BY gname";
+         if($result = $conn->query($sql)){
+            while($ds = $result->fetch_object()){
+               $data[] = $ds;
             }
-            else{
-               echo count($data); 
-            }
-         ?></h4>
-      <table border="2" cellspacing=2 cellpadding=5>
-         <thead>
-            <tr>
-               <th scope="col">Getränkename</th>
-               <th scope="col">Getränkehersteller</th>
-               <th scope="col">Kategorie</th>
-               <th scope="col">Preis pro Flasche</th>
-            </tr>
-         </thead>
-         <tbody>
+         }
+      ?>
+
+      <div class="row">
+         <h4>Anzahl der Getränke: 
             <?php
-            if(empty($data)){
-                  echo("Es kann noch keine Tabelle erzeugt werden.");
-            } else {
-            foreach ($data as $content){
-            
-            ?>
-            <tr>
-               <td>
-                  <?php
-                     echo $content->gname;
-                  ?>
-               </td>
-               <td>
-                  <?php
-                     echo $content->ghersteller;
-                  ?>
-               </td>
-               <td>
-                  <?php
-                     echo $content->kategorie;
-                  ?>
-               </td>
-               <td>
-                  <?php
-                     echo $content->preis;
-                  ?>
-               </td>
-            </tr>
-            <?php
-            }}
-            ?>
-         </tbody>
-      </table>
-   </div>
+               if(empty($data)){
+                  echo("Es sind noch keine Getränke vorhanden.");
+               }
+               else{
+                  echo count($data); 
+               }
+            ?></h4>
+         <table border="2" cellspacing=2 cellpadding=5>
+            <thead>
+               <tr>
+                  <th scope="col">Getränkename</th>
+                  <th scope="col">Getränkehersteller</th>
+                  <th scope="col">Kategorie</th>
+                  <th scope="col">Preis pro Flasche</th>
+               </tr>
+            </thead>
+            <tbody>
+               <?php
+                  if(empty($data)){
+                        echo("Es kann noch keine Tabelle erzeugt werden.");
+                  } else {
+                  foreach ($data as $content){
+               ?>
+               <tr>
+                  <td>
+                     <?php
+                        echo $content->gname;
+                     ?>
+                  </td>
+                  <td>
+                     <?php
+                        echo $content->ghersteller;
+                     ?>
+                  </td>
+                  <td>
+                     <?php
+                        echo $content->kategorie;
+                     ?>
+                  </td>
+                  <td>
+                     <?php
+                        echo $content->preis;
+                     ?>
+                  </td>
+               </tr>
+               <?php
+               }}
+               ?>
+            </tbody>
+         </table>
+      </div>
    </BODY>
 </HTML>

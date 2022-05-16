@@ -1,3 +1,4 @@
+<!-- Dies ist eine gemeinsame Leistung der Gruppe -->
 <?php
 
 $servername = "localhost";
