@@ -29,19 +29,20 @@
 
                 if($j < $akJahr) {
                     $anzW = idate('W', mktime(0, 0, 0, 12, 28, $j));
-                } elseif($j = $akJahr)  {
-                    $anzw = $akWoche;
+                } elseif($j == $akJahr)  {
+                    $anzW = $akWoche;
                 }
 
-                for($i = $ewoche; $i <= $anzW; $i++){
+                for($i = $ewoche; $i <= $anzW; $i++) {
 
-                    $timestamp_montag  = strtotime("{$akJahr}-W{$i}");
-                    $timestamp_sonntag = strtotime("{$akJahr}-W{$i}-7");
+                    $timestamp_montag  = date("Y-m-d", strtotime("{$j}-W{$i}"));
+                    $timestamp_sonntag = date("Y-m-d", strtotime("{$j}-W{$i}-7"));
                     
                     $data[0]['KW'] = $i;
+                    
 
                     //Gesamtumsatz
-                    $sqlgu = "SELECT SUM(g.preis) FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.bestdatum >= $timestamp_montag AND b.bestdatum >= $timestamp_sonntag";                       
+                    $sqlgu = "SELECT SUM(g.preis) FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.bestdatum >= $timestamp_montag AND b.bestdatum <= $timestamp_sonntag";                       
                     $resultgu = $conn->query($sqlgu);
                     $sgu = $resultgu->fetch_object();
                     $data[0]['Gesamtumsatz'] = $sgu;
