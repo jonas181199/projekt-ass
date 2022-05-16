@@ -69,15 +69,15 @@
             }
         ?>
 
-        <!-- <div class="row">
+        <div class="row">
             <table border="2" cellspacing=2 cellpadding=5>
                 <thead>
                     <tr>
-                    <th scope="col">Kalenderwoche</th>
-                    <th scope="col">Gesamtumsatz</th>
-                    <th scope="col">Größte Bestellung</th>
-                    <th scope="col">Standartabweichung</th>
-                    <th scope="col">Median aller Bestellungen</th>
+                        <th scope="col">Kalenderwoche</th>
+                        <th scope="col">Gesamtumsatz</th>
+                        <th scope="col">Größte Bestellung</th>
+                        <th scope="col">Standartabweichung</th>
+                        <th scope="col">Median aller Bestellungen</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -88,32 +88,37 @@
                         foreach ($data as $content){                        
                     ?>
                     <tr>
-                    <td>
-                        <?php
-                            echo $content->gname;
-                        ?>
-                    </td>
-                    <td>
-                        <?php
-                            echo $content->ghersteller;
-                        ?>
-                    </td>
-                    <td>
-                        <?php
-                            echo $content->kategorie;
-                        ?>
-                    </td>
-                    <td>
-                        <?php
-                            echo $content->preis;
-                        ?>
-                    </td>
+                        <td>
+                            <?php
+                                echo $content['KW'];
+                            ?>
+                        </td>
+                        <td>
+                            <?php
+                                echo $content['Gesamtumsatz'];
+                            ?>
+                        </td>
+                        <td>
+                            <?php
+                                echo $content['Größte Bestellung'];
+                            ?>
+                        </td>
+                        <td>
+                            <?php
+                                echo $content['Standartabweichung'];
+                            ?>
+                        </td>
+                        <td>
+                            <?php
+                                echo $content['Median'];
+                            ?>
+                        </td>
                     </tr>
                     <?php
                         }}
                     ?>
                 </tbody>
             </table>
-        </div> -->
+        </div>
     </BODY>
 </HTML>

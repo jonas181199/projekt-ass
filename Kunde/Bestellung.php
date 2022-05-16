@@ -2,12 +2,8 @@
     include_once '../includes/dbh.inc.php';
 
     session_start();
-    if(!isset($_SESSION['anzPosition'])){
-        $_SESSION['anzPosition'] = $_POST['anzPosition'];
-    } 
-    if(!isset($_SESSION['mid'])){
-        $_SESSION['mid'] = $_POST['mid'];
-    } 
+    $_SESSION['anzPosition'] = $_POST['anzPosition'];
+    $_SESSION['mid'] = $_POST['mid'];
 ?>
 
 <!DOCTYPE HTML>

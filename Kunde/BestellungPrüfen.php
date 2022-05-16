@@ -21,9 +21,9 @@
             $sbestand = "sbestand" . $i;
             $smid     = "mid";
             
-            $_SESSION[$sgname]       = mysqli_real_escape_string($conn, $_POST[$sgname]);
-            $_SESSION[$shname]       = mysqli_real_escape_string($conn, $_POST[$shname]);
-            $_SESSION[$smenge]       = mysqli_real_escape_string($conn, $_POST[$smenge]);
+            $_SESSION[$sgname] = mysqli_real_escape_string($conn, $_POST[$sgname]);
+            $_SESSION[$shname] = mysqli_real_escape_string($conn, $_POST[$shname]);
+            $_SESSION[$smenge] = mysqli_real_escape_string($conn, $_POST[$smenge]);
 
             //Prüfen, ob alle Felder befüllt
             if(!isset($_POST[$sgname]) || strlen($_POST[$sgname]) == 0 || 
