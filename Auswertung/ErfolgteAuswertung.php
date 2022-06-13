@@ -42,20 +42,21 @@
                     $data[$h]['KW'] = $i;                   
 
                     //Gesamtumsatz
-                    $sqlgu = "SELECT SUM(g.preis) AS preis FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.bestdatum >= $timestamp_montag AND b.bestdatum <= $timestamp_sonntag";                       
+                    $sqlgu = "SELECT SUM(g.preis) AS gpreis FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag'";                       
                     $resultgu = $conn->query($sqlgu);
                     $sgu = $resultgu->fetch_object();
-
-                    if (empty($sgu->preis)){
+                    echo $sqlgu;
+                    echo $sgu->gpreis;
+                    if (empty($sgu->gpreis)){
                         $data[$h]['Gesamtumsatz'] = 0;
                     } else{
-                        $data[$h]['Gesamtumsatz'] = $sgu->preis;
+                        $data[$h]['Gesamtumsatz'] = $sgu->gpreis;
                     }
 
 
                     //Größte Bestellung
                     //$sqlgb = "SELECT SUM(g.preis) as summe, b.bestellnr FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.bestdatum >= $timestamp_montag AND b.bestdatum <= $timestamp_sonntag GROUP BY b.bestellnr HAVING MAX(SUM(g.preis))";                 
-                    $sqlgb = "SELECT MAX(summe) AS maxSumme FROM (SELECT SUM(g.preis) AS summe, b.bestellnr FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.bestdatum >= $timestamp_montag AND b.bestdatum <= $timestamp_sonntag GROUP BY b.bestellnr) AS summen";                 
+                    $sqlgb = "SELECT MAX(summe) AS maxSumme FROM (SELECT SUM(g.preis) AS summe, b.bestellnr FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag' GROUP BY b.bestellnr) AS summen";                 
                     $resultgb = $conn->query($sqlgb);
                     $sgb = $resultgb->fetch_object();
 
@@ -65,12 +66,13 @@
                         $data[$h]['Größte Bestellung'] = $sgb->maxSumme;
                     }
 
-                    
+
                     //Standartabweichung
-                    $savg    = "SELECT AVG(g.preis) FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.bestdatum >= $timestamp_montag AND b.bestdatum >= $timestamp_sonntag GROUP BY b.bestellnr";                       
-                    $sanz    = "SELECT count(*) FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.bestdatum >= $timestamp_montag AND b.bestdatum >= $timestamp_sonntag GROUP BY b.bestellnr";                       
-                    $spreise = "SELECT g.preis FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.bestdatum >= $timestamp_montag AND b.bestdatum >= $timestamp_sonntag GROUP BY b.bestellnr";                       
+                    $savg    = "SELECT AVG(g.preis) as average, b.bestellnr FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag' GROUP BY b.bestellnr";                       
+                    $sanz    = "SELECT count(*) as anzahl, b.bestellnr  FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag' GROUP BY b.bestellnr";                       
+                    $spreise = "SELECT g.preis, b.bestellnr FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag' GROUP BY b.bestellnr";                       
                     $abw     = 0;
+                    $ianz    = 0; 
 
                     $resultavg = $conn->query($savg);
                     $avg       = $resultavg->fetch_object();
@@ -78,29 +80,34 @@
                     $resultanz = $conn->query($sanz);
                     $anz       = $resultanz->fetch_object();
 
+                    if (!empty($anz->anzahl)){
+                        $ianz = $anz->anzahl; 
+                    } 
+
                     $resultpreise = $conn->query($spreise);
                     while($preise = $resultpreise->fetch_object()){
-                        $abw += ($preise->preis - $avg) * ($sst->preis - $avg);
+            
+                        $abw += ($preise->preis - $avg->average) * ($preise->preis - $avg->average);
                     }
-                    $result = sqrt((1 / ($anz - 1)) * $abw);
+                    $result = sqrt((1 / ($ianz - 1)) * $abw);
                     $data[$h]['Standartabweichung'] = $result;
                     
                     //Median
-                    if ($anz > 0){
-                        $sqlm = "SELECT SUM(g.preis) AS preis FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.bestdatum >= $timestamp_montag AND b.bestdatum <= $timestamp_sonntag";                       
+                    if ($ianz > 0){
+                        $sqlm = "SELECT SUM(g.preis) AS preis FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag'";                       
                         $resultm = $conn->query($sqlm);
                         $sm = $resultm->fetch_object();
 
                         $preisa[] = $resultpreise->fetch_assoc(); 
 
-                        if ($anz > 0){
-                            $mittelwert = floor(($anz-1)/2); 
+                        if ($ianz > 0){
+                            $mittelwert = floor(($ianz -1)/2); 
                         }
                         else {
                             $mittelwert = 0;
                         }
-
-                        if($anz % 2) { 
+                        
+                        if($ianz % 2) { 
                             $median = $preisa[$mittelwert];
                         } else { 
                             $low = $preisa[$mittelwert];
