@@ -18,7 +18,7 @@
          <fieldset>
             <legend>Bitte geben Sie den Starttermin für die Auswertung an</legend>
             <p>
-               <label for="start">Starttermin </label>
+               <label for="start">Starttermin</label>
                <input type="date" name="start" id="start">
             </p>
             <form action="../Auswertung/Vorhersage.php" method="POST">

@@ -20,6 +20,7 @@
             $data[][] = null;
             $h        = 0;
 
+
             // Jahresgrenzending
             $eJahr = date("Y", strtotime($_POST['start']));
             if (date("m", strtotime($_POST['start'])) == "01" && (date("W", strtotime($_POST['start'])) == 52 || date("W", strtotime($_POST['start'])) == 53)){
@@ -94,18 +95,20 @@
                     
 
                     //Median
-                    $sqlm  = "SELECT SUM(g.preis) AS gpreis, b.bestellnr FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag' GROUP BY b.bestellnr"; 
+                    $sqlm  = "SELECT SUM(g.preis) AS gpreis, b.bestellnr FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.mid = $marktid AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag' GROUP BY b.bestellnr"; 
                     $resultm = $conn->query($sqlm);
+                    $resultm2 = $conn->query($sqlm);
                     $k = 0;                   
                     while($sm = $resultm->fetch_object()){          
-                        $preisa[$k] = $sm->gpreis;
+                        $preisa[$k] = (double)$sm->gpreis;
                         $k++;
                     }
-                    
-                    if (!empty($sm)){
+
+                    if (!empty($resultm2->fetch_object())){
                         $anzahlElemente = count($preisa);
                         sort($preisa);
                         $mittelwert = floor(($anzahlElemente -1)/2); 
+                        echo 'ahoi';
 
                         if($anzahlElemente % 2 == 0 OR $anzahlElemente == 1) { 
                             $median = $preisa[$mittelwert];
@@ -124,8 +127,6 @@
                 }
                 $ewoche = 1;
             }
-
-            print_r($data);
         ?>
 
         <div class="row">
