@@ -1,9 +1,6 @@
 <!-- Dies ist eine gemeinsame Leistung der Gruppe -->
 <?php
-
-include_once '../includes/dbh.inc.php';
-
-
+   include_once '../includes/dbh.inc.php';
 ?>
 
 <!DOCTYPE HTML>

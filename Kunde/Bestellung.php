@@ -2,8 +2,10 @@
     include_once '../includes/dbh.inc.php';
 
     session_start();
-    $_SESSION['anzPosition'] = $_POST['anzPosition'];
-    $_SESSION['mid'] = $_POST['mid'];
+    if (isset($_POST['Bestätigen'])){
+        $_SESSION['anzPosition'] = mysqli_real_escape_string($conn, $_POST['anzPosition']);
+        $_SESSION['mid'] = mysqli_real_escape_string($conn, $_POST['mid']);
+    }
 ?>
 
 <!DOCTYPE HTML>

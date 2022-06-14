@@ -58,7 +58,6 @@
 
 
                     //Größte Bestellung
-                    //$sqlgb = "SELECT SUM(g.preis) as summe, b.bestellnr FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.bestdatum >= $timestamp_montag AND b.bestdatum <= $timestamp_sonntag GROUP BY b.bestellnr HAVING MAX(SUM(g.preis))";                 
                     $sqlgb = "SELECT MAX(summe) AS maxSumme FROM (SELECT SUM(g.preis) AS summe, b.bestellnr FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.mid = $marktid AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag' GROUP BY b.bestellnr) AS summen";                 
                     $resultgb = $conn->query($sqlgb);
                     $sgb = $resultgb->fetch_object();
@@ -76,9 +75,13 @@
                     $spreise = "SELECT g.preis, b.bestellnr FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.mid = $marktid AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag' GROUP BY b.bestellnr";                       
                     $abw     = 0;
                     $ianz    = 0; 
+                    $iavg    = 0;
 
                     $resultavg = $conn->query($savg);
                     $avg       = $resultavg->fetch_object();
+                    if (!empty($avg->average)){
+                        $iavg = $avg->average; 
+                    } 
 
                     $resultanz = $conn->query($sanz);
                     $anz       = $resultanz->fetch_object();
@@ -88,7 +91,7 @@
 
                     $resultpreise = $conn->query($spreise);
                     while($preise = $resultpreise->fetch_object()){           
-                        $abw += ($preise->preis - $avg->average) * ($preise->preis - $avg->average);
+                        $abw += ($preise->preis - $iavg) * ($preise->preis - $iavg);
                     }                   
                     $result = sqrt((1 / ($ianz - 1)) * $abw);
                     $data[$h]['Standartabweichung'] = $result;
@@ -108,7 +111,6 @@
                         $anzahlElemente = count($preisa);
                         sort($preisa);
                         $mittelwert = floor(($anzahlElemente -1)/2); 
-                        echo 'ahoi';
 
                         if($anzahlElemente % 2 == 0 OR $anzahlElemente == 1) { 
                             $median = $preisa[$mittelwert];
