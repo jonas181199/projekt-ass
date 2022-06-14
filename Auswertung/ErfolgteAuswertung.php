@@ -22,11 +22,12 @@
 
             // Jahresgrenzending
             $eJahr = date("Y", strtotime($_POST['start']));
-            if (date("m", strtotime($_POST['start'])) == "01" && (date("W", strtotime($_POST['start'])) == 52 || date("W", strtotime($_POST['start'])) == 53))
+            if (date("m", strtotime($_POST['start'])) == "01" && (date("W", strtotime($_POST['start'])) == 52 || date("W", strtotime($_POST['start'])) == 53)){
                 $eJahr--;
-            else if (date("m", strtotime($_POST['start'])) == "12" && date("W", strtotime($_POST['start'])) == 01)
+            }    
+            else if (date("m", strtotime($_POST['start'])) == "12" && date("W", strtotime($_POST['start'])) == 01){
                 $eJahr++;
-
+            }
 
             for($j = $eJahr; $j <= $akJahr; $j++)  {
 
@@ -47,8 +48,7 @@
                     $sqlgu = "SELECT SUM(g.preis) AS gpreis FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.mid = $marktid AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag'";                       
                     $resultgu = $conn->query($sqlgu);
                     $sgu = $resultgu->fetch_object();
-                    echo $sqlgu;
-                    echo $sgu->gpreis;
+
                     if (empty($sgu->gpreis)){
                         $data[$h]['Gesamtumsatz'] = 0;
                     } else{
@@ -81,46 +81,45 @@
 
                     $resultanz = $conn->query($sanz);
                     $anz       = $resultanz->fetch_object();
-
                     if (!empty($anz->anzahl)){
                         $ianz = $anz->anzahl; 
                     } 
 
                     $resultpreise = $conn->query($spreise);
-                    while($preise = $resultpreise->fetch_object()){
-            
+                    while($preise = $resultpreise->fetch_object()){           
                         $abw += ($preise->preis - $avg->average) * ($preise->preis - $avg->average);
-                    }
+                    }                   
                     $result = sqrt((1 / ($ianz - 1)) * $abw);
                     $data[$h]['Standartabweichung'] = $result;
                     
+
                     //Median
-                    if ($ianz > 0){
-                        $sqlm = "SELECT SUM(g.preis) AS preis FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.mid = $marktid AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag'";                       
-                        $resultm = $conn->query($sqlm);
-                        $sm = $resultm->fetch_object();
+                    $sqlm  = "SELECT SUM(g.preis) AS gpreis, b.bestellnr FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag' GROUP BY b.bestellnr"; 
+                    $resultm = $conn->query($sqlm);
+                    $k = 0;                   
+                    while($sm = $resultm->fetch_object()){          
+                        $preisa[$k] = $sm->gpreis;
+                        $k++;
+                    }
+                    
+                    if (!empty($sm)){
+                        $anzahlElemente = count($preisa);
+                        sort($preisa);
+                        $mittelwert = floor(($anzahlElemente -1)/2); 
 
-                        $preisa[] = $resultpreise->fetch_assoc(); 
-
-                        if ($ianz > 0){
-                            $mittelwert = floor(($ianz -1)/2); 
-                        }
-                        else {
-                            $mittelwert = 0;
-                        }
-                        
-                        if($ianz % 2) { 
+                        if($anzahlElemente % 2 == 0 OR $anzahlElemente == 1) { 
                             $median = $preisa[$mittelwert];
                         } else { 
-                            $low = $preisa[$mittelwert];
-                            $high = $preisa[$mittelwert+1];
+                            $low    = $preisa[$mittelwert];
+                            $high   = $preisa[$mittelwert+1];
                             $median = (($low+$high)/2);
                         }
-                        $data[$h]['Median'] = $median;
-                    } else {
+                        $data[$h]['Median'] = $median;        
+                    } 
+                    else {
                         $data[$h]['Median'] = 0;
-                    }
-
+                    }    
+                    unset($preisa);              
                     $h++;
                 }
                 $ewoche = 1;
