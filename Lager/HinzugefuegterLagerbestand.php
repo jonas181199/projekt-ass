@@ -53,9 +53,6 @@
 
         //Lagerbestand aktualisieren
         $sql = "CALL replacelagerbestand('$mid', '$gname', '$ghersteller', '$lagerbest')";
-        echo $sql;
-
-      //   $sql = "replace into lager (mid, gname, ghersteller, bestand) values ('" . $mid. "', '" . $gname. "', '" . $ghersteller. "', '" . $lagerbest. "')";
          if ($conn->query($sql) == false){
                         echo "Fehler <br>";
         }   else {
