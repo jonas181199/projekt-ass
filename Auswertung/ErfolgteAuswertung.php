@@ -69,7 +69,7 @@
                     }
 
 
-                    //Standartabweichung
+                    //Standardabweichung
                     $savg    = "SELECT AVG(g.preis) as average, b.bestellnr FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.mid = $marktid AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag' GROUP BY b.bestellnr";                       
                     $sanz    = "SELECT count(*) as anzahl, b.bestellnr  FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.mid = $marktid AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag' GROUP BY b.bestellnr";                       
                     $spreise = "SELECT g.preis, b.bestellnr FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.mid = $marktid AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag' GROUP BY b.bestellnr";                       
@@ -94,7 +94,7 @@
                         $abw += ($preise->preis - $iavg) * ($preise->preis - $iavg);
                     }                   
                     $result = sqrt((1 / ($ianz - 1)) * $abw);
-                    $data[$h]['Standartabweichung'] = $result;
+                    $data[$h]['Standardabweichung'] = $result;
                     
 
                     //Median
@@ -138,7 +138,7 @@
                         <th scope="col">Kalenderwoche</th>
                         <th scope="col">Gesamtumsatz</th>
                         <th scope="col">Größte Bestellung</th>
-                        <th scope="col">Standartabweichung</th>
+                        <th scope="col">Standardabweichung</th>
                         <th scope="col">Median aller Bestellungen</th>
                     </tr>
                 </thead>
@@ -167,7 +167,7 @@
                         </td>
                         <td>
                             <?php
-                                echo $content['Standartabweichung'];
+                                echo $content['Standardabweichung'];
                             ?>
                         </td>
                         <td>
