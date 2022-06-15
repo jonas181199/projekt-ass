@@ -21,14 +21,14 @@
                <label for="start">Starttermin</label>
                <input type="date" name="start" id="start">
             </p>
-            <form action="../Auswertung/Vorhersage.php" method="POST">
             <p>
                <input type="submit" name="auswerten" value="Auswertung starten">
             </p>
          </fieldset>
-      </form> 
+      </form>
+      <br>
       <form action="Vorhersage.php" method="POST">
-         <button>Umsatzvorhersage für die nächste Woche</button>
+         <button>Zur Umsatzvorhersage für die nächste Woche</button>
       </form>
    </BODY>
 </HTML>
