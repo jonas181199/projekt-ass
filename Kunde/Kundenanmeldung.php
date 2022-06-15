@@ -1,5 +1,9 @@
 <?php
    include_once '../includes/dbh.inc.php';
+   if (!isset($_POST['babschließen'])) {
+      header('Location: BestellungPrüfen.php');
+      exit;
+  }
 ?>
 
 <!DOCTYPE HTML>
@@ -11,7 +15,7 @@
       <title>Kundenanmeldung</title>
    </HEAD>
    <BODY>
-      <form action="ErfolgreicheBestellung.php" method="POST" >
+      <form action="ErfolgreicheBestellung.php" method="POST">
          <fieldset>
             <legend>Bitte die Anmeldedaten für Ihren Account eingeben</legend>
             <p>
@@ -28,11 +32,11 @@
          </fieldset>
       </form>
       <br>
-      <form action="Kundenregistrierung.php">
+      <form action="Kundenregistrierung.php" method="POST">
          <fieldset>
             <legend>Wenn Sie neu auf dem Portal sind, können Sie sich hier registrieren</legend>
             <p>
-               <a href="Kundenregistrierung.php">Registrieren</a> 
+               <input type="submit" name="Anmelden" value="Anmelden">
             </p>
          </fieldset>
       </form>

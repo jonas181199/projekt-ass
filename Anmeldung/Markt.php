@@ -1,16 +1,20 @@
-<!-- Dies ist eine gemeinsame Leistung der Gruppe -->
 <?php
-
    include_once '../includes/dbh.inc.php';
    session_start();
 
-   if(!isset($_SESSION['mid'])){
-      $_SESSION['mid'] = $_POST['mid'];
-   } else {
-      echo "Sie sind angemeldet!";
+   if (empty($_SESSION['mid']) AND !isset($_POST['loginmarkt']) AND !isset($_POST['loginmarkt'])) {
+      header('Location: Marktanmeldung.php');
+      exit;
    }
+   
+   // ganze Prüfungen hier einfügen (methoden Aufrufe)
 
+   if(!isset($_SESSION['mid']) OR isset($_POST['loginmarkt']) OR isset($_POST['loginmarkt'])){
+      $_SESSION['mid'] = $_POST['mid'];
+   } 
 ?>
+
+<!-- Dies ist eine gemeinsame Leistung der Gruppe -->
 
 <!DOCTYPE HTML>
 <HTML>
@@ -61,10 +65,10 @@
          } 
       }
       elseif(isset($_POST['registrieremarkt'])){
-         $mid = mysqli_real_escape_string($conn, $_POST['mid']);
-         $mname = mysqli_real_escape_string($conn, $_POST['mname']);
+         $mid          = mysqli_real_escape_string($conn, $_POST['mid']);
+         $mname        = mysqli_real_escape_string($conn, $_POST['mname']);
          $mpasswort_un = mysqli_real_escape_string($conn, $_POST['mpasswort']);
-         $mpasswort = password_hash($mpasswort_un, PASSWORD_BCRYPT);
+         $mpasswort    = password_hash($mpasswort_un, PASSWORD_BCRYPT);
 
          //Prüfen, ob alle Felder befüllt
          if(!isset($_POST['mid']) || strlen($_POST['mid']) == 0 || 
@@ -83,7 +87,7 @@
             }
          }
 
-         //Prüfen, ob mname schon vergeben
+         //Prüfen, ob Marktname schon vergeben
          $mn = $conn->query("select mname from markt");
          while(($s = $mn->fetch_object()) != false){
             if($s->mname == $_POST['mname']){

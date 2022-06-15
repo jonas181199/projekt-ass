@@ -1,6 +1,11 @@
 <?php
    include_once '../includes/dbh.inc.php';
    session_start();
+
+   if ((empty($_SESSION['mid']) OR empty($_SESSION['shname1']) OR empty($_SESSION['sgname1']) OR empty($_SESSION['smenge1'])) AND !isset($_POST['bPrüfen'])) {
+      header('Location: Bestellung.php');
+      exit;
+  }
 ?>
 
 <!DOCTYPE HTML>
@@ -34,42 +39,17 @@
                   echo "Bitte füllen Sie die erforderlichen Felder aus!";
                   return;
             }
-
-            //Prüfen ob Getränk-Hersteller Kombination existiert
-            $getraenk = $conn->query("select * from getraenke where gname = '$_SESSION[$sgname]' AND ghersteller = '$_SESSION[$shname]'");
-            while($s = $getraenk->fetch_object()){
-               $data[] = $s;
-            }
-            if(empty($data)){
-               echo "Bestellposition" . $i . ": ";
-               echo "Dieser Hersteller bietet das ausgewählte Getränk nicht an!";
-               return;
-            } 
             
-            //Bestand prüfen
-            if ($smenge <= 0){
-               echo "Bestellposition " . $i . ": ";
-               echo "Die Bestellmenge darf nicht Null sein!";
-               return;
-            }
+            $stmt = $conn->prepare("SELECT BestellungPruefen(?, ?, ?, ?) AS BestellungPruefen");
+            $stmt->bind_param("ssis", $_SESSION[$shname], $_SESSION[$sgname], $_SESSION[$smenge], $_SESSION[$smid]); 
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $prErfolgreich = $result->fetch_object();
 
-            $bestand = $conn->query("select bestand from lager where gname = '$_SESSION[$sgname]' AND ghersteller = '$_SESSION[$shname]' AND mid = '$_SESSION[$smid]'");
-            while($s = $bestand->fetch_object()){
-               $b[] = $s;
-               if ($s->bestand <  $_SESSION[$smenge]){
-                  echo "Bestellposition" . $i . ": ";
-                  echo "Die eingegebene Menge liegt über dem Lagerbestand!";
-                  echo "Aktueller Lagerbestand: " . $s->bestand;
-                  return;
-               }
-               $_SESSION[$sbestand] = $s->bestand - $_SESSION[$smenge];
-            }
-            if(empty($b)){
-               echo "Bestellposition" . $i . ": ";
-               echo "Die eingegebene Menge liegt über dem Lagerbestand!";
-               echo "Aktueller Lagerbestand: 0";
+            if($prErfolgreich->BestellungPruefen == 0){
+               echo "Die Prüfung ist fehlgeschlagen!";
                return;
-            } 
+            }
          }  
       ?>
 
