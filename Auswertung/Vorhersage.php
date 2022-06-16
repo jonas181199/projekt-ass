@@ -15,9 +15,7 @@
    <BODY>
    <h1>Vorhersage des Umsatzes für die nächste Woche</h1>
     <form action="ErfolgteVorhersage.php" method="POST">
-        <label for="start">Starttermin</label>
-            <input type="date" name="start" id="start"><br>
-        <label for="kategorie">Kategorie</label>
+        <label for="kategorie">Kategorie:</label>
 	        <select name="kategorie">
                 <!-- "%" dient als Platzhalter, wenn keine Vorhersage des Umsatzes je Kategorie erwünscht ist -->
                 <option value="%" selected>Beliebig</option>

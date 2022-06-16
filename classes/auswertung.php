@@ -16,86 +16,143 @@ class Auswertung{
     private $KWUmsatzSum;
     private $umsatzFolgewoche;
 
-    function __construct($startdatum, $kategorie, $mid, $conn){
-        $this->startdatum = $startdatum;
+    function __construct($kategorie, $mid, $conn){
+        //$this->startdatum = $startdatum;
         $this->kategorie = $kategorie;
         $this->mid = $mid;
         $this->conn = $conn;
-        $anzkw = $this->setKW($startdatum);
+        //$anzkw = $this->setKW($startdatum);
         $this->KW = $anzkw;
         $KWUmsatz = $this->setUmsatzVonKW($conn, $anzkw);
         $this->KWUmsatz= $KWUmsatz;
     }
 
-    //Diese Funktion bestimmt den letzten Wochentag einer KW
-	public function letzterWT($datum) {
-		date_default_timezone_set('Europe/Berlin');
-		// Wenn Zeitwechsel von Sommerzeit zu Winterzeit
-		if ('23' == date("H", $datum))
-	  		$datum = $datum + 60*60;
-	    $wochentag = date("W", $datum);
-	    if ($wochentag == 0)
-	    	$letzterTag = $datum + 60 * 60 * 24 - 1;
-	    else {
-	    	$zusaetzlicherTag = 8 - $wochentag;
-	    	$letzterTag = $datum + $zusaetzlicherTag * 60 * 60 * 24 - 1;
-	    }
-	    // Wenn Zeitwechsel von Winterzeit zu Sommerzeit
-	    if ('00' == date("H",$letzterTag))
-	  		$letzterTag = $letzterTag - 60*60;
-	    return $letzterTag;
-	}
+    // //Diese Funktion bestimmt den letzten Wochentag einer KW
+	// public function letzterWT($datum) {
+	// 	date_default_timezone_set('Europe/Berlin');
+	// 	// Wenn Zeitwechsel von Sommerzeit zu Winterzeit
+	// 	if ('23' == date("H", $datum))
+	//   		$datum = $datum + 60 * 60;
+	//     $wochentag = date("W", $datum);
+	//     if ($wochentag == 0)
+	//     	$letzterTag = $datum + 60 * 60 * 24 - 1;
+	//     else {
+	//     	$zusaetzlicherTag = 8 - $wochentag;
+	//     	$letzterTag = $datum + $zusaetzlicherTag * 60 * 60 * 24 - 1;
+	//     }
+	//     // Wenn Zeitwechsel von Winterzeit zu Sommerzeit
+	//     if ('00' == date("H", $letzterTag))
+	//   		$letzterTag = $letzterTag - 60 * 60;
+	//     return $letzterTag;
+	// }
 
     //Diese Funktion bestimmt die KW
-    private function setKW($startdatum) {
-    	date_default_timezone_set('Europe/Berlin');
-    	$ZPstart = $startdatum;
-    	//Definieren von Kalenderwochen
-    	$KW = [];
-    	do {
-			$kw = date("W Y", $ZPstart);
-			$ZPende = $this->letzterWT($ZPstart);
-            //Start und Ende in das richtige Datumsformat bringen
-			$ZPstart_formatiert = date("Y-m-d H:i:s", $ZPstart);
-			$ZPende_formatiert = date("Y-m-d H:i:s", $ZPende);
-			//Erstellen einer KW mit KWStart und KWEnde
-			$KW[$kw]['ZPstart'] = $ZPstart_formatiert;
-			$KW[$kw]['ZPende'] = $ZPende_formatiert;
-			//Definition der nächsten Woche
-			$ZPstart = $ZPende + 1;
-			$ZPende = $this->letzterWT($ZPstart);
-		} while ( $ZPstart < time());
-		return $KW;
-    }
+    // private function setKW($startdatum) {
+    // 	date_default_timezone_set('Europe/Berlin');
+    // 	$ZPstart = $startdatum;
+    // 	//Definieren von Kalenderwochen
+    // 	$KW = [];
+    // 	do {
+	// 		$kw = date("W Y", $ZPstart);
+	// 		$ZPende = $this->letzterWT($ZPstart);
+
+    //         //Start und Ende in das richtige Datumsformat bringen
+	// 		$ZPstart_formatiert = date("Y-m-d H:i:s", $ZPstart);
+	// 		$ZPende_formatiert = date("Y-m-d H:i:s", $ZPende);
+
+	// 		//Erstellen einer KW mit KWStart und KWEnde
+	// 		$KW[$kw]['ZPstart'] = $ZPstart_formatiert;
+	// 		$KW[$kw]['ZPende'] = $ZPende_formatiert;
+
+	// 		//Definition der nächsten Woche
+	// 		$ZPstart = $ZPende + 1;
+	// 		$ZPende = $this->letzterWT($ZPstart);
+	// 	} while ($ZPstart < time());
+	// 	return $KW;
+    // }
 
     //Diese Funktion ermittelt den Umsatz der KW
     public function setUmsatzVonKW($conn, $KW){
-		$ZPstart = $this->startdatum;
-        $ZPende = $this->letzterWT($ZPstart);
-        $mid = $this->mid;
-		$kategorie = $this->kategorie;
-		$KWUmsatz = [];
-        $sqlu = "SELECT SUM(p.ganzahl * g.preis) as Umsatz 
-        from bestellpos p, getraenke g, bestellung b 
-        where p.bestellnr = b.bestellnr 
-        AND g.ghersteller = p.ghersteller 
-        AND g.gname = p.gname 
-        AND b.mid = $mid;
-        AND g.kategorie like $kategorie
-        AND b.bestdatum BETWEEN $ZPstart
-        AND $ZPende
-        group by b.bestellnr;";
-		foreach ($KW as $key => $value) {
-			$resultu = $conn->query($sqlu);
-			$gu = $resultu->fetch_all();
-			$umsatzArray = [];
-			foreach ($gu as $umsatz) {
-				$umsatzArray[] = $umsatz['Umsatz'];
-			}
-			$KWUmsatz[$key] = $umsatzArray;
+
+		// $ZPstart = $this->startdatum;
+        // $ZPende = $this->letzterWT($ZPstart);
+		$akJahr   = idate('Y');
+		$akWoche  = date('W');
+		$ewoche   = date('W', strtotime("-12 weeks"));
+		$h        = 0;
+		$eTag = date('Y-m-d', strtotime("-84 days"));
+
+
+		// Jahresgrenzending
+		//wenn Woche 1 bspw. im alten Jahr beginnt oder W 53 in neuem Jahr
+		$eJahr = date("Y", strtotime($eTag));
+		if (date("m", strtotime($eTag)) == "01" && (date("W", strtotime($eTag)) == 52 || date("W", strtotime($eTag)) == 53)){
+			$eJahr--;
+		}    
+		else if (date("m", strtotime($eTag)) == "12" && date("W", strtotime($eTag)) == 01){
+			$eJahr++;
 		}
+
+		for($j = $eJahr; $j <= $akJahr; $j++)  {
+			if($j < $akJahr) {
+				$anzW = idate('W', mktime(0, 0, 0, 12, 28, $j));
+			} elseif($j == $akJahr)  {
+				$anzW = $akWoche;
+			}
+
+			for($i = $ewoche; $i <= $anzW; $i++) {
+
+				$timestamp_montag  = date("Y-m-d", strtotime("{$j}-W{$i}"));
+				$timestamp_sonntag = date("Y-m-d", strtotime("{$j}-W{$i}-7"));                                  
+				
+				$mid = $this->mid;
+				$kategorie = $this->kategorie;
+				$KWUmsatz = [];
+				$sqlu = "SELECT SUM(p.ganzahl * g.preis) as Umsatz 
+				from bestellpos p, getraenke g, bestellung b 
+				where p.bestellnr = b.bestellnr 
+				AND g.ghersteller = p.ghersteller 
+				AND g.gname = p.gname 
+				AND b.mid = $mid;
+				AND g.kategorie like $kategorie
+				AND b.bestdatum BETWEEN $timestamp_montag
+				AND $timestamp_sonntag
+				group by b.bestellnr;";
+				
+				$resultu = $conn->query($sqlu);
+	 			$gu = $resultu->fetch_object();
+				$KWUmsatz[$h] = $gu->Umsatz;
+				$h++;
+			}
+			$ewoche = 1;
+        }
 		return $KWUmsatz;
 	}
+
+    //     $mid = $this->mid;
+	// 	$kategorie = $this->kategorie;
+	// 	$KWUmsatz = [];
+    //     $sqlu = "SELECT SUM(p.ganzahl * g.preis) as Umsatz 
+    //     from bestellpos p, getraenke g, bestellung b 
+    //     where p.bestellnr = b.bestellnr 
+    //     AND g.ghersteller = p.ghersteller 
+    //     AND g.gname = p.gname 
+    //     AND b.mid = $mid;
+    //     AND g.kategorie like $kategorie
+    //     AND b.bestdatum BETWEEN $ZPstart
+    //     AND $ZPende
+    //     group by b.bestellnr;";
+	// 	foreach ($KW as $key => $value) {
+	// 		$resultu = $conn->query($sqlu);
+	// 		$gu = $resultu->fetch_object();
+	// 		$umsatzArray = [];
+	// 		foreach ($gu as $umsatz) {
+	// 			$umsatzArray[] = $umsatz['Umsatz'];
+	// 		}
+	// 		$KWUmsatz[$key] = $umsatzArray;
+	// 	}
+	// 	return $KWUmsatz;
+	// }
 
     //Durch diese Funktion werden die bisherige gesamte Umsatzsumme berechnet
     private function berechnungUmsatzSummen($KW, $umsaetze) {
@@ -112,6 +169,7 @@ class Auswertung{
 		return $KWUmsatzSum;
 	}
 
+	/*
     //Berechnung der linearen Regression zur Prognose des Umsatzes für die der aktuellen Woche folgenden Woche
 	public function lineareRegression ($conn, $aktuellerWert) {
 		$mid = $this->mid;
@@ -152,6 +210,7 @@ class Auswertung{
 		}
         //Die aktuelle KW ist noch nicht abgeschlossen - der Zukunftswert noch nicht bekannt. Somit wird sie gelöscht.
 		unset($subpopulation[$zeitraum]);
+
 		$arithmetisches_mittel_x = (float) $ges_x / $zeitraum;
 		$arithmetisches_mittel_y = (float) $ges_x / $zeitraum;
 		$arithmetisches_mittel_x_qu = (float) $arithmetisches_mittel_x * $arithmetisches_mittel_x;
@@ -167,14 +226,16 @@ class Auswertung{
 		return $y;
 
 	}
+	*/
 
+	/*
     public function getUmsatzNaechsteWoche($aktuellerWert) {
 		$conn = $this->conn;
 		$umsatzFolgewoche = $this->lineareRegression($conn, $aktuellerWert);
 		$this->umsatzFolgewoche = $umsatzFolgewoche;
 		return $this->umsatzFolgewoche;
 	}
-
+	*/
 
 
 
