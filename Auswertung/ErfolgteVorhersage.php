@@ -17,7 +17,7 @@ if(isset($_POST['vorhersage'])){
     $timestamp_sonntag = date("Y-m-d", strtotime("{$akJahr}-W{$akWoche}-7")); 
 
     $startdatum_time = mktime(0,0,0,$eingabe_datum_arr[1],$eingabe_datum_arr[2],$eingabe_datum_arr[0]);
-    $auswertung = new Auswertung($startdatum_time, $auswertung_kat, 4, $conn); // mid
+    $auswertung = new Auswertung($startdatum_time, $auswertung_kat, $_SESSION['mid'], $conn);
     $umsaetze = $auswertung->getGesamtumsatz($timestamp_montag, $timestamp_sonntag);
     $regressionswert = $auswertung->lineareRegression_calc($umsaetze);
     ?>

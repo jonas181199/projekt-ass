@@ -9,11 +9,6 @@ class Auswertung {
     private $start_datum;
     private $kategorie;
     private $mid;
-    private $UmsatzKommendeW;
-    private $kws;
-    private $bzeitraumregression;
-    private $wUmsaetze;
-    private $wUmsatzSum;
 
     function __construct($start_datum, $kategorie, $mid, $conn) {
     	$this->start_datum = $start_datum;
@@ -22,8 +17,8 @@ class Auswertung {
     	$this->conn = $conn;
     }
 
-
-	//Lineare Regression zur Umsatzprognose der aktuellen Woche folgenden Woche
+	/** Jonas Schirm */
+	//Berechnung der Lineare Regression zur Umsatzprognose der aktuellen Woche folgenden Woche
 	public function lineareRegression_calc ($aktuellerWert) {
 		$conn = $this->conn;
 		$akJahr   = idate('Y');
@@ -35,7 +30,7 @@ class Auswertung {
 		$h    = 0;
 
 
-		// Jahresgrenzending
+		//Jahresgrenzending
 		if (date("m", strtotime($this->start_datum)) == "01" && (date("W", strtotime($this->start_datum)) == 52 || date("W", strtotime($this->start_datum)) == 53)){
 			$eJahr--;
 		}    
@@ -43,6 +38,7 @@ class Auswertung {
 			$eJahr++;
 		}
 
+		//
 		for($j = $eJahr; $j <= $akJahr; $j++)  {
 
 			if($j < $akJahr) {
@@ -66,43 +62,42 @@ class Auswertung {
 
 		$hilfsarray = [];
 		$i = 0;
-		$ges_x = 0;
-		$ges_y = 0;
-		$ges_x_qu = 0;
-		$ges_x_mal_y = 0;
+		$gesamtx = 0;
+		$gesamty = 0;
+		$quadratgesamtx = 0;
+		$produktxy = 0;
 		foreach ($data as $key => $value) {
 			$hilfsarray[$i]['Woche'] = $key;
 			$hilfsarray[$i]['Umsatz x'] = $value['Gesamtumsatz'];
-			$ges_x += $hilfsarray[$i]['Umsatz x'];
+			$gesamtx += $hilfsarray[$i]['Umsatz x'];
 			$hilfsarray[$i]['nachfolgenderUmsatz y'] = $data[$i+1]['Gesamtumsatz'];
-			$ges_y += $hilfsarray[$i]['nachfolgenderUmsatz y'];
-			$hilfsarray[$i]['x-quadrat'] = $value['Gesamtumsatz']*$value['Gesamtumsatz'];
-			$ges_x_qu += $hilfsarray[$i]['x-quadrat'];
-			$hilfsarray[$i]['x*y'] = $value['Gesamtumsatz']*$data[$i+1]['Gesamtumsatz'];
-			$ges_x_mal_y += $hilfsarray[$i]['x*y'];
+			$gesamty += $hilfsarray[$i]['nachfolgenderUmsatz y'];
+			$hilfsarray[$i]['x-quadrat'] = $value['Gesamtumsatz'] * $value['Gesamtumsatz'];
+			$quadratgesamtx += $hilfsarray[$i]['x-quadrat'];
+			$hilfsarray[$i]['x*y'] = $value['Gesamtumsatz'] * $data[$i+1]['Gesamtumsatz'];
+			$produktxy += $hilfsarray[$i]['x*y'];
 			$i++;
+			//Indexposition 15->W16->akt Woche soll nicht eingerechnet werden
 			if($i==14){
 				break;
 			}
 		}
 		
-		$arith_mittel_x    = (float) $ges_x/16;
-		$arith_mittel_y    = (float) $ges_x/16;
-		$arith_mittel_x_qu = (float) $arith_mittel_x * $arith_mittel_x;
+		$arithmetischesmittelx    = (float) $gesamtx / 16;
+		$arithmetischesmittely    = (float) $gesamtx / 16;
+		$arithmetischesmittelxx = (float) $arithmetischesmittelx * $arithmetischesmittelx;
 
 		// Berechnung der Regressionsgeraden y
-		$b_dividend = $ges_x_mal_y - 16 * $arith_mittel_x * $arith_mittel_y;
-		$b_divisor = $ges_x_qu - 16 * $arith_mittel_x_qu;
+		$dividend = $produktxy - 16 * $arithmetischesmittelx * $arithmetischesmittely;
+		$divisor = $quadratgesamtx - 16 * $arithmetischesmittelxx;
 		$y = 0;
-		if ($b_divisor != 0) {
-			$b = $b_dividend/$b_divisor;
-			$a = $arith_mittel_y-$b*$arith_mittel_x;
+		if ($divisor != 0) {
+			$b = $dividend / $divisor;
+			$a = $arithmetischesmittely - $b * $arithmetischesmittelx;
 			$y = $a + $b * $aktuellerWert;				//aktueller Wert des Umsatz der aktuellen Woche
 		}
 		return $y;
 	}
-
-
 
 	public function getGesamtumsatz($timestamp_montag, $timestamp_sonntag){
 		$sqlgu = "SELECT SUM(g.preis * bp.ganzahl) AS gpreis FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.mid = $this->mid AND g.kategorie like '$this->kategorie' AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag'";                       
@@ -115,7 +110,6 @@ class Auswertung {
 		}
 	}
 
-
 	private function getGroesteBestellung($timestamp_montag, $timestamp_sonntag){
 		$sqlgb = "SELECT MAX(summe) AS maxSumme FROM (SELECT SUM(g.preis * bp.ganzahl) AS summe, b.bestellnr FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.mid = $this->mid AND g.kategorie like '$this->kategorie' AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag' GROUP BY b.bestellnr) AS summen";                 
 		$resultgb = $this->conn->query($sqlgb);
@@ -126,7 +120,6 @@ class Auswertung {
 			return $sgb->maxSumme;
 		}
 	}
-
 
 	private function getStandardabweichung($timestamp_montag, $timestamp_sonntag){		
 	
