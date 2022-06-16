@@ -2,7 +2,7 @@
 <?php
     session_start();
     include_once '../classes/auswertung.php';
-    include_once '../includes/dbh.inc.php'
+    include_once '../includes/dbh.inc.php';
 ?>
 
 <?php
