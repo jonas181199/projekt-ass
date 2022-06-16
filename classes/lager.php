@@ -51,7 +51,8 @@ class Lager {
             return;
          }
          
-        
+        //Aufruf der stored function, um die Lager-Tabelle zu aktualisieren und um zu prüfen, ob
+        //der eingegebene Bestand nicht negativ ist
         $stmt = $this->conn->prepare("SELECT replacelagerbestand(?, ?, ?, ?) AS replacelagerbestand");
         $stmt->bind_param("sssi", $this->mid, $this->gname, $this->ghersteller, $this->lagerbest);
         $stmt->execute();
