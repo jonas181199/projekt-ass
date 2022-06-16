@@ -60,12 +60,9 @@ class Auswertung {
 				$data[$h]['Gesamtumsatz'] = $this->getGesamtumsatz($timestamp_montag, $timestamp_sonntag);
 
 				$h++;
-				echo $h;
 			}
 			$ewoche = 1;
         }
-
-		var_dump($data);
 
 		$hilfsarray = [];
 		$i = 0;
