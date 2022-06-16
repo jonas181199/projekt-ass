@@ -31,12 +31,14 @@ if ((empty($_SESSION['mid']) OR !isset($_POST['ghinzufuegen']))) {
                return;
          }
 
+         //Stored Function (insertgetraenke) aufrufen
          $stmt = $conn->prepare("SELECT insertgetraenk(?, ?, ?, ?) AS insertgetraenk");
          $stmt->bind_param("sssi", $ghersteller, $gname, $kategorie, $preis);
          $stmt->execute();
          $result = $stmt->get_result();
          $insertErgebnis = $result->fetch_object();
         
+         //Fehlerbehandlung Stored Function (insertgetraenke)
          if($insertErgebnis->insertgetraenk == 0){
             echo "Das Getränk wurde hinzugefügt";
             return;
