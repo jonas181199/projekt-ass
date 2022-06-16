@@ -47,29 +47,29 @@ class Auswertung{
 	// }
 
     //Diese Funktion bestimmt die KW
-    // private function setKW($startdatum) {
-    // 	date_default_timezone_set('Europe/Berlin');
-    // 	$ZPstart = $startdatum;
-    // 	//Definieren von Kalenderwochen
-    // 	$KW = [];
-    // 	do {
-	// 		$kw = date("W Y", $ZPstart);
-	// 		$ZPende = $this->letzterWT($ZPstart);
+    private function setKW($startdatum) {
+    	date_default_timezone_set('Europe/Berlin');
+    	$ZPstart = $startdatum;
+    	//Definieren von Kalenderwochen
+    	$KW = [];
+    	do {
+			$kw = date("W Y", $ZPstart);
+			$ZPende = $this->letzterWT($ZPstart);
 
-    //         //Start und Ende in das richtige Datumsformat bringen
-	// 		$ZPstart_formatiert = date("Y-m-d H:i:s", $ZPstart);
-	// 		$ZPende_formatiert = date("Y-m-d H:i:s", $ZPende);
+            //Start und Ende in das richtige Datumsformat bringen
+			$ZPstart_formatiert = date("Y-m-d H:i:s", $ZPstart);
+			$ZPende_formatiert = date("Y-m-d H:i:s", $ZPende);
 
-	// 		//Erstellen einer KW mit KWStart und KWEnde
-	// 		$KW[$kw]['ZPstart'] = $ZPstart_formatiert;
-	// 		$KW[$kw]['ZPende'] = $ZPende_formatiert;
+			//Erstellen einer KW mit KWStart und KWEnde
+			$KW[$kw]['ZPstart'] = $ZPstart_formatiert;
+			$KW[$kw]['ZPende'] = $ZPende_formatiert;
 
-	// 		//Definition der nächsten Woche
-	// 		$ZPstart = $ZPende + 1;
-	// 		$ZPende = $this->letzterWT($ZPstart);
-	// 	} while ($ZPstart < time());
-	// 	return $KW;
-    // }
+			//Definition der nächsten Woche
+			$ZPstart = $ZPende + 1;
+			$ZPende = $this->letzterWT($ZPstart);
+		} while ($ZPstart < time());
+		return $KW;
+    }
 
     //Diese Funktion ermittelt den Umsatz der KW
     public function setUmsatzVonKW($conn, $KW){
@@ -169,19 +169,19 @@ class Auswertung{
 		return $KWUmsatzSum;
 	}
 
-	/*
+	
     //Berechnung der linearen Regression zur Prognose des Umsatzes für die der aktuellen Woche folgenden Woche
 	public function lineareRegression ($conn, $aktuellerWert) {
 		$mid = $this->mid;
 		$kategorie = $this->kategorie;
-		$jetzt = time();
+		$jetzt = date('Y-m-d');
 		$subpopulation = [];
 		//Die Regressionsrechnung basiert auf den Daten der letzten 12 Wochen.
         //Dies ist wurde intern entschieden.
         //Eine Anpassung ist über $zeitraum möglich 
 		$zeitraum = 12;
-		$startBetrachtung = $jetzt - 60 * 60 * 24 * 7 * $zeitraum - 1; 
-		$betrachtung = $this->setKW($startBetrachtung);
+		$startBetrachtung = date('W', strtotime("-12 weeks"));
+		$betrachtung = $startBetrachtung;
 		$this->zeitraumRegression = $betrachtung;
 		$umsaetze = $this->setUmsatzVonKW($conn, $betrachtung);
 		$KWUmsatz = $this->berechnungUmsatzSummen($betrachtung, $umsaetze);
@@ -208,12 +208,13 @@ class Auswertung{
 			$ges_x_mal_y += $subpopulation[$i]['x*y'];
 			$i++;
 		}
+
         //Die aktuelle KW ist noch nicht abgeschlossen - der Zukunftswert noch nicht bekannt. Somit wird sie gelöscht.
 		unset($subpopulation[$zeitraum]);
 
 		$arithmetisches_mittel_x = (float) $ges_x / $zeitraum;
-		$arithmetisches_mittel_y = (float) $ges_x / $zeitraum;
-		$arithmetisches_mittel_x_qu = (float) $arithmetisches_mittel_x * $arithmetisches_mittel_x;
+		$arithmetisches_mittel_y = (float) $ges_y / $zeitraum;
+		$arithmetisches_mittel_x_qu = (float) $arithmetisches_mittel_x * $arithmetisches_mittel_y;
 		//Berechnen der Regressionsgeraden y
 		$b_dividend = $ges_x_mal_y - $zeitraum * $arithmetisches_mittel_x * $arithmetisches_mittel_y;
 		$b_divisor = $ges_x_qu - $zeitraum * $arithmetisches_mittel_x_qu;
@@ -226,16 +227,14 @@ class Auswertung{
 		return $y;
 
 	}
-	*/
+	
 
-	/*
     public function getUmsatzNaechsteWoche($aktuellerWert) {
 		$conn = $this->conn;
 		$umsatzFolgewoche = $this->lineareRegression($conn, $aktuellerWert);
 		$this->umsatzFolgewoche = $umsatzFolgewoche;
 		return $this->umsatzFolgewoche;
 	}
-	*/
 
 
 
