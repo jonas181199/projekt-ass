@@ -7,11 +7,14 @@
 
 <?php
 if(isset($_POST['vorhersage'])){
-	$kategorie = $_POST['kategorie'];
-    $auswertung = new Auswertung($kategorie, $_SESSION['mid'], $conn);
-    //$regression = $auswertung->getUmsatzNaechsteWoche($umsaetze[date("W Y", time())]);
-    //$letzerwochentag = $auswertung->letzterWT(2022-06-13);
-    //var_dump($letzerwochentag);?>
+    $eingabe_datum = date('Y-m-d');
+    $eingabe_datum_arr = explode('-', $eingabe_datum);
+    $auswertung_kat = $_POST['kategorie'];
+    $startdatum_time = mktime(0,0,0,$eingabe_datum_arr[1],$eingabe_datum_arr[2],$eingabe_datum_arr[0]);
+    $auswertung = new Auswertung($startdatum_time, $auswertung_kat, $_SESSION['mid'], $conn);
+    $umsaetze = $auswertung->getWochenumsatz();
+    $regressionswert = $auswertung->getUmsatzFolgewoche($umsaetze[date("W Y", time())]);
+    ?>
 
-    <p>Erwarteter Umsatz für die kommende Woche: <?php $regression ?> </p>
+    <p>Erwarteter Umsatz für die kommende Woche: <?php echo $regressionswert ?> </p>
 <?php } ?>

@@ -6,7 +6,7 @@
     if (empty($_SESSION['mid'])) {
         header('Location: Marktanmeldung.php');
         exit;
-     }
+    }
 ?>
 
 <!DOCTYPE HTML>

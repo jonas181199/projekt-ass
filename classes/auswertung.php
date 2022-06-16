@@ -15,18 +15,249 @@ class Auswertung{
     private $KWUmsatz;
     private $KWUmsatzSum;
     private $umsatzFolgewoche;
+    private $marktid;
+    private $kalenderWochen;
+    private $betrachtungszeitraumRegression;
+    private $wochenUmsaetze;
+    private $wochenUmsatzSummen;
+    private $groessteWochenumsaetze;
+    private $mediane;
+    private $standardabweichungen;
 
-    function __construct($kategorie, $mid, $conn){
-        //$this->startdatum = $startdatum;
-        $this->kategorie = $kategorie;
-        $this->mid = $mid;
-        $this->conn = $conn;
-        //$anzkw = $this->setKW($startdatum);
-        $this->KW = $anzkw;
-        $KWUmsatz = $this->setUmsatzVonKW($conn, $anzkw);
-        $this->KWUmsatz= $KWUmsatz;
+    function __construct($startdatum, $kategorie, $mid, $conn) {
+    	$this->startdatum = $startdatum;
+    	$this->kategorie = $kategorie;
+    	$this->mid = $mid;
+    	$this->conn = $conn;
+
+    	$kws = $this->setKalenderWochen($startdatum);
+    	$this->kalenderWochen = $kws;
+    	$wochenUmsaetze = $this->setWochenUmsaetze($kws);
+    	$this->wochenUmsaetze = $wochenUmsaetze;
     }
 
+	public function letzterWochentag($datum) {
+		date_default_timezone_set('Europe/Berlin');
+		// Zeitzonenwechsel: Sommer nach Winter
+		if ('23' == date("H",$datum))
+	  		$datum = $datum + 60*60;
+	    $day_of_week = date("w", $datum);
+	    if ($day_of_week == 0)
+	    	$end_of_week = $datum + 60 * 60 * 24 - 1;
+	    else {
+	    	$additional_days = 8 - $day_of_week;
+	    	$end_of_week = $datum + $additional_days * 60 * 60 * 24 - 1;
+	    }
+	    // Zeitzonenwechsel: Winter nach Sommer
+	    if ('00' == date("H",$end_of_week))
+	  		$end_of_week = $end_of_week - 60*60;
+	    return $end_of_week;
+	}
+
+	private function setKalenderWochen($startdatum) {
+    	date_default_timezone_set('Europe/Berlin');
+    	$startzeitpunkt = $startdatum;
+    	// KalenderWochen definieren
+    	$kalenderWochen = [];
+    	do {
+			$kw = date("W Y", $startzeitpunkt);
+			$endzeitpunkt = $this->letzterWochentag($startzeitpunkt);
+			$startzeitpunkt_formatiert = date("Y-m-d", $startzeitpunkt);
+			$endzeitpunkt_formatiert = date("Y-m-d", $endzeitpunkt);
+			
+			//Kalenderwoche mit Start und Ende erzeugen
+			$kalenderWochen[$kw]['startzeitpunkt'] = $startzeitpunkt_formatiert;
+			$kalenderWochen[$kw]['endzeitpunkt'] = $endzeitpunkt_formatiert;
+
+			// Nächste Woche einläuten
+			$startzeitpunkt = $endzeitpunkt + 1;
+			$endzeitpunkt = $this->letzterWochentag($startzeitpunkt);
+		} while ( $startzeitpunkt < time());
+
+		return $kalenderWochen;
+    }
+
+	public function setWochenUmsaetze($kalenderWochen){
+		$mid = $this->mid;
+		$kategorie = $this->kategorie;
+		$wochenUmsaetze = [];
+		$stmt = $this->conn->prepare("SELECT SUM(p.ganzahl * g.preis) as Umsatz 
+			from bestellpos p, getraenke g, bestellung b 
+			where p.bestellnr = b.bestellnr 
+			AND g.ghersteller = p.ghersteller 
+			AND g.gname = p.gname 
+			AND b.mid = ?
+			AND g.kategorie like ?
+			AND b.bestdatum BETWEEN ?
+			AND ?
+			group by b.bestellnr;");
+		foreach ($kalenderWochen as $key => $value) {
+			$stmt->bind_param("ssii", $mid, $kategorie, $value['startzeitpunkt'], $value['endzeitpunkt']);
+			$stmt->execute();
+			$result = $stmt->get_result();
+			$ergebnis = $result->fetch_all();
+			$umsatzArray = [];
+			foreach ($ergebnis as $umsatz) {
+				$umsatzArray[] = $umsatz['Umsatz'];
+			}
+			$wochenUmsaetze[$key] = $umsatzArray;
+			}
+			return $wochenUmsaetze;
+	}
+
+	private function berechnungUmsatzSummen($kalenderWochen, $umsaetze) {
+		$wochenUmsatzSummen = [];
+		foreach ($kalenderWochen as $key => $value) {
+			$umsatzsumme = 0;
+			if (count($umsaetze[$key])) {
+				foreach ($umsaetze[$key] as $umsatz) {
+					$umsatzsumme += $umsatz;
+				}
+			}
+			$wochenUmsatzSummen[$key] = $umsatzsumme;
+		}
+		return $wochenUmsatzSummen;
+	}
+
+
+
+	//Lineare Regression zur Umsatzprognose der aktuellen Woche folgenden Woche
+	public function berechnungLineareRegression ($aktuellerWert) {
+		$mid = $this->mid;
+		$kategorie = $this->kategorie;
+		$jetzt = time();
+		$subpopulation = [];
+		// Als Datengrundlage für die Regressionsrechnung werden jeweils die letzten 12 Wochen vor der aktuellen Woche verwendet.
+		// Dies wurde von der Gruppe so entschieden, und lässt sich über den Parameter $betrachtungszeitraum ändern. 
+		$betrachtungszeitraum = 6;
+		$startBetrachtung = $jetzt - 60 * 60 * 24 * 7 * $betrachtungszeitraum - 1; 
+		$betrachtung = $this->setKalenderWochen($startBetrachtung);
+		$this->betrachtungszeitraumRegression = $betrachtung;
+		$umsaetze = $this->setWochenUmsaetze($betrachtung);
+		$wochenUmsaetze = $this->berechnungUmsatzSummen($betrachtung, $umsaetze);
+		$i = 0;
+		$ges_x = 0;
+		$ges_y = 0;
+		$ges_x_qu = 0;
+		$ges_x_mal_y = 0;
+		foreach ($this->betrachtungszeitraumRegression as $key => $value) {
+			// Datum der folgewoche ermitteln.
+			// Da es noch keine Zukunftswerte in der Datenbank gibt, kann dort auch nichts ausgelesen werden.
+			if ($i < $betrachtungszeitraum) {
+				$date = explode(' ', $key);
+				$folgewoche = strtotime(sprintf('%dW%02d', $date[1], $date[0]));
+				$folgeKW = date("W Y", $folgewoche+604800);
+			}
+			$subpopulation[$i]['Woche'] = $key;
+			$subpopulation[$i]['Umsatz x'] = $wochenUmsaetze[$key];
+			$ges_x += $subpopulation[$i]['Umsatz x'];
+			$subpopulation[$i]['nachfolgenderUmsatz y'] = $wochenUmsaetze[$folgeKW];
+			$ges_y += $subpopulation[$i]['nachfolgenderUmsatz y'];
+			$subpopulation[$i]['x-quadrat'] = $wochenUmsaetze[$key]*$wochenUmsaetze[$key];
+			$ges_x_qu += $subpopulation[$i]['x-quadrat'];
+			$subpopulation[$i]['x*y'] = $wochenUmsaetze[$key]*$wochenUmsaetze[$folgeKW];
+			$ges_x_mal_y += $subpopulation[$i]['x*y'];
+			$i++;
+		}
+		// Da die aktuelle Woche nicht abgeschlossen ist, und ihr Zukunftswert nicht bekannt ist, wird sie entfernt.
+		unset($subpopulation[$betrachtungszeitraum]);
+
+		$arith_mittel_x = (float) $ges_x/$betrachtungszeitraum;
+		$arith_mittel_y = (float) $ges_x/$betrachtungszeitraum;
+		$arith_mittel_x_qu = (float) $arith_mittel_x * $arith_mittel_x;
+
+		// Berechnung der Regressionsgeraden y
+		$b_dividend = $ges_x_mal_y - $betrachtungszeitraum * $arith_mittel_x * $arith_mittel_y;
+		$b_divisor = $ges_x_qu - $betrachtungszeitraum * $arith_mittel_x_qu;
+		$y = 0;
+		if ($b_divisor <> 0) {
+			$b = $b_dividend/$b_divisor;
+			$a = $arith_mittel_y-$b*$arith_mittel_x;
+			$y = $a + $b * $aktuellerWert;
+		}
+		return $y;
+
+	}
+
+	public function getUmsatzFolgewoche($aktuellerWert) {
+		$conn = $this->conn;
+		$umsatzFolgewoche = $this->berechnungLineareRegression($aktuellerWert);
+		$this->umsatzFolgewoche = $umsatzFolgewoche;
+		return $this->umsatzFolgewoche;
+	}
+
+	public function getWochenumsatz() {
+		$kalenderWochen = $this->kalenderWochen;
+		$umsaetze = $this->wochenUmsaetze;
+		$this->wochenUmsatzSummen = $this->berechnungUmsatzSummen($kalenderWochen, $umsaetze);
+		return $this->wochenUmsatzSummen;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/*
     // //Diese Funktion bestimmt den letzten Wochentag einer KW
 	// public function letzterWT($datum) {
 	// 	date_default_timezone_set('Europe/Berlin');
@@ -236,6 +467,7 @@ class Auswertung{
 		return $this->umsatzFolgewoche;
 	}
 
+	*/
 
 
 
