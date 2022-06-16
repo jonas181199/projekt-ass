@@ -57,6 +57,7 @@ if ((empty($_SESSION['mid']))) {
       </form>
       <br><br>
 
+      <!-- Erstellung einer Tabelle, die die Getraenke der DB (getraenke) darstellt -->
       <h2>Die Getränke der Datenbank</h2>
       <?php
          $sql = "SELECT * FROM getraenke ORDER BY gname";

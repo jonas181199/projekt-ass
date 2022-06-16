@@ -31,13 +31,14 @@ if ((empty($_SESSION['mid']) OR !isset($_POST['ghinzufuegen']))) {
                return;
          }
 
+         //Stored Function (insertgetraenke) aufrufen
          $stmt = $conn->prepare("SELECT insertgetraenk(?, ?, ?, ?) AS insertgetraenk");
-         $stmt->bind_param("sssi", $_SESSION[$ghersteller], $_SESSION[$gname], $_SESSION[$kategorie], $_SESSION[$preis]);
+         $stmt->bind_param("sssi", $ghersteller, $gname, $kategorie, $preis);
          $stmt->execute();
          $result = $stmt->get_result();
          $insertErgebnis = $result->fetch_object();
-         echo $insertErgebnis->insertgetraenk;
-         
+        
+         //Fehlerbehandlung Stored Function (insertgetraenke)
          if($insertErgebnis->insertgetraenk == 0){
             echo "Das Getränk wurde hinzugefügt";
             return;
@@ -51,7 +52,7 @@ if ((empty($_SESSION['mid']) OR !isset($_POST['ghinzufuegen']))) {
             return;
          }
          
-
+         //Möglichkeit eines Inserts ohne Stored Procedure
          /* $sql = "insert into getraenke (gname, ghersteller, kategorie, preis) values ('" . $gname. "', '" . $ghersteller. "', '" . $kategorie. "', '" . $preis. "')";
           if ($conn->query($sql) == false){
              echo "Fehler <br>";
@@ -65,7 +66,7 @@ if ((empty($_SESSION['mid']) OR !isset($_POST['ghinzufuegen']))) {
              echo "Das Getränk wurde erfolgreich der Datenbank hinzugefügt";
           }
           $conn->close();
-          */ 
+         */ 
          ?>
 
       <form action="Getraenkeerfassen.php">

@@ -15,21 +15,17 @@
    <BODY>
    <h1>Vorhersage des Umsatzes für die nächste Woche</h1>
     <form action="ErfolgteVorhersage.php" method="POST">
-        <label for="start">Starttermin</label>
-            <input type="date" name="start" id="start"><br>
-        <label for="kategorie">Kategorie</label>
-	        <select name="kategorie">
-                <!-- "%" dient als Platzhalter, wenn keine Vorhersage des Umsatzes je Kategorie erwünscht ist -->
-                <option value="%" selected>Beliebig</option>
-                <option value ="Wasser">Wasser</option>
-                <option value ="Saft">Saft</option>
-                <option value ="Limonade">Limonade</option>
-                <option value ="Wein">Wein</option>
-                <option value ="Bier">Bier</option>
-                <option value ="Sonstiges">Sonstiges</option>
-	        </select>
-            <br><br>
-        <input type="submit" name="vorhersage" value="Jetzt prognostizieren">
+		<label for="kategorie">Kategorie</label><br>
+	     <select name="kategorie">
+	        <option value="%" selected="selected">Alle</option>
+	        <option value ="Wasser">Wasser</option>
+	        <option value ="Saft">Saft</option>
+	        <option value ="Limonade">Limonade</option>
+	        <option value ="Wein">Wein</option>
+	        <option value ="Bier">Bier</option>
+	        <option value ="Sonstiges">Sonstiges</option>
+	    </select><br><br>
+		<input type="submit" name="vorhersage" value="Jetzt vorhersagen!">
     </form>
 
    </BODY>
