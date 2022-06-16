@@ -1,5 +1,6 @@
 <?php
     include_once '../includes/dbh.inc.php';
+    include_once '../classes/auswertung.php';
     session_start();
 
     if (empty($_SESSION['mid'])) {
@@ -18,125 +19,10 @@
     </HEAD>
     <BODY>
         <?php
-            $marktid  = $_SESSION['mid'];
-            $akJahr   = idate('Y');
-            $akWoche  = date('W');
-            $ewoche   = date('W', strtotime($_POST['start']));
-            $data[][] = null;
-            $h        = 0;
-
-            // Jahresgrenzending
-            $eJahr = date("Y", strtotime($_POST['start']));
-            if (date("m", strtotime($_POST['start'])) == "01" && (date("W", strtotime($_POST['start'])) == 52 || date("W", strtotime($_POST['start'])) == 53)){
-                $eJahr--;
-            }    
-            else if (date("m", strtotime($_POST['start'])) == "12" && date("W", strtotime($_POST['start'])) == 01){
-                $eJahr++;
-            }
-
-            for($j = $eJahr; $j <= $akJahr; $j++)  {
-
-                if($j < $akJahr) {
-                    $anzW = idate('W', mktime(0, 0, 0, 12, 28, $j));
-                } elseif($j == $akJahr)  {
-                    $anzW = $akWoche;
-                }
-
-                for($i = $ewoche; $i <= $anzW; $i++) {
-
-                    $timestamp_montag  = date("Y-m-d", strtotime("{$j}-W{$i}"));
-                    $timestamp_sonntag = date("Y-m-d", strtotime("{$j}-W{$i}-7"));                   
-                    $data[$h]['KW'] = $i;                   
-
-                    //Gesamtumsatz
-                    $sqlgu = "SELECT SUM(g.preis * bp.ganzahl) AS gpreis FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.mid = $marktid AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag'";                       
-                    $resultgu = $conn->query($sqlgu);
-                    $sgu = $resultgu->fetch_object();
-                    if (empty($sgu->gpreis)){
-                        $data[$h]['Gesamtumsatz'] = 0;
-                    } else{
-                        $data[$h]['Gesamtumsatz'] = $sgu->gpreis;
-                    }
-
-
-                    //Größte Bestellung
-                    $sqlgb = "SELECT MAX(summe) AS maxSumme FROM (SELECT SUM(g.preis * bp.ganzahl) AS summe, b.bestellnr FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.mid = $marktid AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag' GROUP BY b.bestellnr) AS summen";                 
-                    $resultgb = $conn->query($sqlgb);
-                    $sgb = $resultgb->fetch_object();
-                    if (empty($sgb->maxSumme)){
-                        $data[$h]['Größte Bestellung'] = 0;
-                    } else{
-                        $data[$h]['Größte Bestellung'] = $sgb->maxSumme;
-                    }
-
-
-                    //Standardabweichung
-                    $savg    = "SELECT AVG(g.preis * bp.ganzahl) as average FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.mid = $marktid AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag'";                                          
-                    $sanz    = "SELECT count(*) as anzahl FROM bestellung b where b.mid = $marktid AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag'"; 
-                    $spreise = "SELECT (g.preis * bp.ganzahl) as gpreis, b.bestellnr FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.mid = $marktid AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag' GROUP BY b.bestellnr";                       
-                    $abw     = 0;
-                    $ianz    = 0; 
-                    $iavg    = 0;
-
-                    $resultavg = $conn->query($savg);
-                    $avg       = $resultavg->fetch_object();
-                    if (!empty($avg->average)){
-                        $iavg = $avg->average; 
-                    } 
-
-                    $resultanz = $conn->query($sanz);
-                    $anz       = $resultanz->fetch_object();
-                    if (!empty($anz->anzahl)){
-                        $ianz = $anz->anzahl; 
-                    } 
-
-                    if($ianz > 1){
-                        $resultpreise = $conn->query($spreise);
-                        while($preise = $resultpreise->fetch_object()){           
-                            $abw += ($preise->gpreis - $iavg) * ($preise->gpreis - $iavg);
-                        }                   
-                        $result = sqrt((1 / ($ianz - 1)) * $abw);
-                        $data[$h]['Standardabweichung'] = $result;
-                    } else{
-                        $data[$h]['Standardabweichung'] = 0;
-                    }                  
-                    
-
-                    //Median
-                    $smedian  = "SELECT SUM(g.preis * bp.ganzahl) AS gpreis, b.bestellnr FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.mid = $marktid AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag' GROUP BY b.bestellnr"; 
-                    $resultmedian = $conn->query($smedian);
-                    $resultm = $conn->query($smedian);
-                    $k = 0;                   
-                    while($sm = $resultmedian->fetch_object()){          
-                        $preisa[$k] = (double)$sm->gpreis;
-                        $k++;
-                    }
-
-                    if (!empty($resultm->fetch_object())){
-                        $anzahlElemente = count($preisa);
-                        sort($preisa);
-                        $mittelwert = floor(($anzahlElemente -1)/2); 
-
-                        if($anzahlElemente % 2 == 0 OR $anzahlElemente == 1) { 
-                            $median = $preisa[$mittelwert];
-                        } else { 
-                            $low    = $preisa[$mittelwert];
-                            $high   = $preisa[$mittelwert+1];
-                            $median = (($low+$high)/2);
-                        }
-                        $data[$h]['Median'] = $median;        
-                    } 
-                    else {
-                        $data[$h]['Median'] = 0;
-                    }    
-                    unset($preisa);              
-                    $h++;
-                }
-                $ewoche = 1;
-            }
-
-            //Objekt erstellen
-            //$data = getAuswertungsTabelle($_SESSION['mid'], $_POST['start'])
+            //Objekt erzeugen
+            $auswertung = new Auswertung($_POST['start'], $_POST['kategorie'], $_SESSION['mid'], $conn);  
+            $data[][] = null;          
+            $data = $auswertung->getAuswertungsTabelle();
         ?>
 
         <div class="row">

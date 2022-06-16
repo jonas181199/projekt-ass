@@ -22,6 +22,19 @@
                <input type="date" name="start" id="start">
             </p>
             <p>
+               <label for="kategorie">Kategorie</label>
+               <select name="kategorie">
+                     <!-- "%" dient als Platzhalter, wenn keine Vorhersage des Umsatzes je Kategorie erwünscht ist -->
+                     <option value="%" selected>Beliebig</option>
+                     <option value ="Wasser">Wasser</option>
+                     <option value ="Saft">Saft</option>
+                     <option value ="Limonade">Limonade</option>
+                     <option value ="Wein">Wein</option>
+                     <option value ="Bier">Bier</option>
+                     <option value ="Sonstiges">Sonstiges</option>
+               </select>
+            </p>
+            <p>
                <input type="submit" name="auswerten" value="Auswertung starten">
             </p>
          </fieldset>
