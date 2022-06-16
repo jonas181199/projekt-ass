@@ -31,8 +31,8 @@ class Auswertung {
 		$akWoche  = date('W');
 		$ewoche   = date('W', strtotime("-16 weeks"));
 		$this->start_datum = date("Y-m-d", strtotime("{$eJahr}-W{$ewoche}"));
-		$data[][] = null;
-		$h        = 0;
+		$data = [];
+		$h    = 0;
 
 
 		// Jahresgrenzending
@@ -51,22 +51,21 @@ class Auswertung {
 				$anzW = $akWoche;
 			}
 
-			for($i = $ewoche; $i <= $anzW; $i++) {
+			for($i = $ewoche+1; $i <= $anzW; $i++) {
 
 				$timestamp_montag  = date("Y-m-d", strtotime("{$j}-W{$i}"));
-				$timestamp_sonntag = date("Y-m-d", strtotime("{$j}-W{$i}-7"));                   
-				// $data[$h]['KW'] = $i;               
+				$timestamp_sonntag = date("Y-m-d", strtotime("{$j}-W{$i}-7"));                                 
 				
 				//Gesamtumsatz
 				$data[$h]['Gesamtumsatz'] = $this->getGesamtumsatz($timestamp_montag, $timestamp_sonntag);
 
-
-		
 				$h++;
+				echo $h;
 			}
 			$ewoche = 1;
         }
 
+		var_dump($data);
 
 		$hilfsarray = [];
 		$i = 0;
@@ -89,8 +88,7 @@ class Auswertung {
 				break;
 			}
 		}
-		var_dump($hilfsarray);
-
+		
 		$arith_mittel_x    = (float) $ges_x/16;
 		$arith_mittel_y    = (float) $ges_x/16;
 		$arith_mittel_x_qu = (float) $arith_mittel_x * $arith_mittel_x;
@@ -106,23 +104,6 @@ class Auswertung {
 		}
 		return $y;
 	}
-
-
-
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
