@@ -2,7 +2,13 @@
 <?php
  
 include_once '../includes/dbh.inc.php';
+include_once '../classes/lager.php';
 session_start();
+
+if (empty($_SESSION['mid'])) {
+   header('Location: Marktanmeldung.php');
+   exit;
+}
 
 ?>
 
@@ -28,6 +34,18 @@ session_start();
          <fieldset>
             <legend> Lagerbestand anpassen </legend>
             <p>
+            <label for="ghersteller">Hersteller: </label>
+               <select name="ghersteller">
+                   <?php
+                     $hersteller  = $conn->query("select distinct ghersteller from getraenke");
+                        while(($s = $hersteller->fetch_object()) != false){
+                   ?>  
+                     <option><?php echo $s->ghersteller; ?></option>
+                   <?php      
+                       }
+                   ?>
+               </select>
+
                <label for="gname">Getränkename: </label>
                <select name="gname">
                   <?php
@@ -39,18 +57,6 @@ session_start();
                         }
                     ?>
                </select> 
-
-               <label for="ghersteller">Hersteller: </label>
-               <select name="ghersteller">
-                   <?php
-                     $hersteller  = $conn->query("select distinct ghersteller from getraenke");
-                        while(($s = $hersteller->fetch_object()) != false){
-                   ?>  
-                     <option><?php echo $s->ghersteller; ?></option>
-                   <?php      
-                       }
-                   ?>
-               </select>
             </p>
             <p>
                <label for="lagerbest">Lagerbestand: </label>
@@ -65,15 +71,14 @@ session_start();
 
       <!-- Lagertabelle -->
       <?php
+        $mid = mysqli_real_escape_string($conn, $_SESSION['mid']);
 
-         $mid = mysqli_real_escape_string($conn, $_SESSION['mid']);
-
-         $sql = "SELECT * FROM lager WHERE mid = $mid ORDER BY gname";
-         if($result = $conn->query($sql)){
-            while($ds = $result->fetch_object()){
-               $data[] = $ds;
-            }
-         }
+        $sql = "SELECT * FROM lager WHERE mid = $mid ORDER BY gname";
+        if($result = $conn->query($sql)){
+           while($ds = $result->fetch_object()){
+              $data[] = $ds;
+           }
+        }
       ?>
       <div class=row> 
 
@@ -81,8 +86,8 @@ session_start();
       <table border="2" cellspacing=2 cellpadding=5>
          <thead>
             <tr>
-               <th scope="col">Getränkename</th>
                <th scope="col">Getränkehersteller</th>
+               <th scope="col">Getränkename</th>
                <th scope="col">Lagerbestand</th>
             </tr>
          </thead>
