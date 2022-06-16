@@ -1,7 +1,12 @@
 <!-- Jonas Schirm -->
 <?php
 
-include_once '../includes/dbh.inc.php'
+include_once '../includes/dbh.inc.php';
+session_start();
+if ((empty($_SESSION['mid']) OR !isset($_POST['ghinzufuegen']))) {
+   header('Location: ../Anmeldung/Marktanmeldung.php');
+   exit;
+}
 
 ?>
 
@@ -65,7 +70,7 @@ include_once '../includes/dbh.inc.php'
 
       <form action="Getraenkeerfassen.php">
          <p>
-            <input type="submit" name="gerfassen" value="Hier können Sie ein weiteres Getränk erfassen">
+            <input type="submit" name="gerfassen" value="Erfassen Sie ein weiteres Getränk">
          </p>
       </form>
 
