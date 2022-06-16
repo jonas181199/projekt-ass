@@ -1,83 +1,82 @@
 <!-- Jonas Schirm -->
 <?php
-
     include_once '../includes/dbh.inc.php'
 ?>
 
 <?php 
-class Auswertung{
+class Auswertung {
 
-    private $startdatum;
+    private $start_datum;
     private $kategorie;
     private $mid;
-    private $umsatzFolgewoche;
-    private $kalenderWochen;
-    private $betrachtungszeitraumRegression;
-    private $wochenUmsaetze;
-    private $wochenUmsatzSummen;
+    private $UmsatzKommendeW;
+    private $kws;
+    private $bzeitraumregression;
+    private $wUmsaetze;
+    private $wUmsatzSum;
 
-    function __construct($startdatum, $kategorie, $mid, $conn) {
-    	$this->startdatum = $startdatum;
+    function __construct($start_datum, $kategorie, $mid, $conn) {
+    	$this->start_datum = $start_datum;
     	$this->kategorie = $kategorie;
     	$this->mid = $mid;
     	$this->conn = $conn;
 
-    	$kws = $this->setKalenderWochen($startdatum);
-    	$this->kalenderWochen = $kws;
-    	$wochenUmsaetze = $this->setWochenUmsaetze($kws);
-    	$this->wochenUmsaetze = $wochenUmsaetze;
+    	$kws = $this->setKW($start_datum);
+    	$this->kws = $kws;
+    	$wUmsaetze = $this->setWUmsaetze($kws);
+    	$this->wUmsaetze = $wUmsaetze;
     }
 
-	public function letzterWochentag($datum) {
+	public function letzterWT($date) {
 		date_default_timezone_set('Europe/Berlin');
 		// Zeitzonenwechsel: Sommer nach Winter
-		if ('23' == date("H",$datum))
-	  		$datum = $datum + 60*60;
-	    $day_of_week = date("w", $datum);
-	    if ($day_of_week == 0)
-	    	$end_of_week = $datum + 60 * 60 * 24 - 1;
+		if ('23' == date("H", $date))
+	  		$date = $date + 60*60;
+	    $wt = date("w", $date);
+	    if ($wt == 0)
+	    	$lwt = $date + 60 * 60 * 24 - 1;
 	    else {
-	    	$additional_days = 8 - $day_of_week;
-	    	$end_of_week = $datum + $additional_days * 60 * 60 * 24 - 1;
+	    	$addwt = 8 - $wt;
+	    	$lwt = $date + $addwt * 60 * 60 * 24 - 1;
 	    }
 	    // Zeitzonenwechsel: Winter nach Sommer
-	    if ('00' == date("H",$end_of_week))
-	  		$end_of_week = $end_of_week - 60*60;
-	    return $end_of_week;
+	    if ('00' == date("H", $lwt))
+	  		$lwt = $lwt - 60*60;
+	    return $lwt;
 	}
 
-	private function setKalenderWochen($startdatum) {
+	private function setKW($start_datum) {
     	date_default_timezone_set('Europe/Berlin');
-    	$startzeitpunkt = $startdatum;
-    	// KalenderWochen definieren
-    	$kalenderWochen = [];
+    	$start_zp = $start_datum;
+    	//Definieren der Kalenderwochen
+    	$kws = [];
     	do {
-			$kw = date("W Y", $startzeitpunkt);
-			$endzeitpunkt = $this->letzterWochentag($startzeitpunkt);
-			$startzeitpunkt_formatiert = date("Y-m-d", $startzeitpunkt);
-			$endzeitpunkt_formatiert = date("Y-m-d", $endzeitpunkt);
+			$kw = date("W Y", $start_zp);
+			$end_zp = $this->letzterWT($start_zp);
+			$startzp_formatiert = date("Y-m-d", $start_zp);
+			$endzp_formatiert = date("Y-m-d", $end_zp);
 			
 			//Kalenderwoche mit Start und Ende erzeugen
-			$kalenderWochen[$kw]['startzeitpunkt'] = $startzeitpunkt_formatiert;
-			$kalenderWochen[$kw]['endzeitpunkt'] = $endzeitpunkt_formatiert;
+			$kws[$kw]['start_zp'] = $startzp_formatiert;
+			$kws[$kw]['end_zp'] = $endzp_formatiert;
 
 			// Nächste Woche einläuten
-			$startzeitpunkt = $endzeitpunkt + 1;
-			$endzeitpunkt = $this->letzterWochentag($startzeitpunkt);
-		} while ( $startzeitpunkt < time());
+			$start_zp = $end_zp + 1;
+			$end_zp = $this->letzterWT($start_zp);
+		} while ( $start_zp < time());
 
-		return $kalenderWochen;
+		return $kws;
     }
 
-	public function setWochenUmsaetze($kalenderWochen){
+	public function setWUmsaetze($kws){
 		$mid = $this->mid;
 		$kategorie = $this->kategorie;
-		$wochenUmsaetze = [];
+		$wUmsaetze = [];
 		$stmt = $this->conn->prepare("SELECT SUM(p.ganzahl * g.preis) as Umsatz from bestellpos p, getraenke g, bestellung b  where p.bestellnr = b.bestellnr AND g.ghersteller = p.ghersteller AND g.gname = p.gname AND b.mid = ? AND g.kategorie like ? AND b.bestdatum BETWEEN ? AND ? group by b.bestellnr;");
-		foreach ($kalenderWochen as $key => $value) {
-			$startzeit = strtotime($value['startzeitpunkt']);
-			$endzeit = strtotime($value['endzeitpunkt']);
-			$stmt->bind_param("ssii", $mid, $kategorie, $startzeit, $endzeit);
+		foreach ($kws as $key => $value) {
+			$startzeit = strtotime($value['start_zp']);
+			$endzeit = strtotime($value['end_zp']);
+			$stmt->bind_param("ssss", $mid, $kategorie, $startzeit, $endzeit);
 			$stmt->execute();
 			$result = $stmt->get_result();
 			$ergebnis = $result->fetch_all();
@@ -85,27 +84,27 @@ class Auswertung{
 			foreach ($ergebnis as $umsatz) {
 				$umsatzArray[] = $umsatz['Umsatz'];
 			}
-			$wochenUmsaetze[$key] = $umsatzArray;
+			$wUmsaetze[$key] = $umsatzArray;
 			}
-			return $wochenUmsaetze;
+			return $wUmsaetze;
 	}
 
-	private function berechnungUmsatzSummen($kalenderWochen, $umsaetze) {
-		$wochenUmsatzSummen = [];
-		foreach ($kalenderWochen as $key => $value) {
+	private function Umsatzsummen_calc($kws, $umsaetze) {
+		$wUmsatzSum = [];
+		foreach ($kws as $key => $value) {
 			$umsatzsumme = 0;
 			if (count($umsaetze[$key])) {
 				foreach ($umsaetze[$key] as $umsatz) {
 					$umsatzsumme += $umsatz;
 				}
 			}
-			$wochenUmsatzSummen[$key] = $umsatzsumme;
+			$wUmsatzSum[$key] = $umsatzsumme;
 		}
-		return $wochenUmsatzSummen;
+		return $wUmsatzSum;
 	}
 
 	//Lineare Regression zur Umsatzprognose der aktuellen Woche folgenden Woche
-	public function berechnungLineareRegression ($aktuellerWert) {
+	public function lineareRegression_calc ($aktuellerWert) {
 		$mid = $this->mid;
 		$kategorie = $this->kategorie;
 		$jetzt = time();
@@ -114,16 +113,16 @@ class Auswertung{
 		// Dies wurde von der Gruppe so entschieden, und lässt sich über den Parameter $betrachtungszeitraum ändern. 
 		$betrachtungszeitraum = 6;
 		$startBetrachtung = $jetzt - 60 * 60 * 24 * 7 * $betrachtungszeitraum - 1; 
-		$betrachtung = $this->setKalenderWochen($startBetrachtung);
-		$this->betrachtungszeitraumRegression = $betrachtung;
-		$umsaetze = $this->setWochenUmsaetze($betrachtung);
-		$wochenUmsaetze = $this->berechnungUmsatzSummen($betrachtung, $umsaetze);
+		$betrachtung = $this->setKW($startBetrachtung);
+		$this->bzeitraumregression = $betrachtung;
+		$umsaetze = $this->setWUmsaetze($betrachtung);
+		$wUmsaetze = $this->Umsatzsummen_calc($betrachtung, $umsaetze);
 		$i = 0;
 		$ges_x = 0;
 		$ges_y = 0;
 		$ges_x_qu = 0;
 		$ges_x_mal_y = 0;
-		foreach ($this->betrachtungszeitraumRegression as $key => $value) {
+		foreach ($this->bzeitraumregression as $key => $value) {
 			// Datum der folgewoche ermitteln.
 			// Da es noch keine Zukunftswerte in der Datenbank gibt, kann dort auch nichts ausgelesen werden.
 			if ($i < $betrachtungszeitraum) {
@@ -132,13 +131,13 @@ class Auswertung{
 				$folgeKW = date("W Y", $folgewoche+604800);
 			}
 			$subpopulation[$i]['Woche'] = $key;
-			$subpopulation[$i]['Umsatz x'] = $wochenUmsaetze[$key];
+			$subpopulation[$i]['Umsatz x'] = $wUmsaetze[$key];
 			$ges_x += $subpopulation[$i]['Umsatz x'];
-			$subpopulation[$i]['nachfolgenderUmsatz y'] = $wochenUmsaetze[$folgeKW];
+			$subpopulation[$i]['nachfolgenderUmsatz y'] = $wUmsaetze[$folgeKW];
 			$ges_y += $subpopulation[$i]['nachfolgenderUmsatz y'];
-			$subpopulation[$i]['x-quadrat'] = $wochenUmsaetze[$key]*$wochenUmsaetze[$key];
+			$subpopulation[$i]['x-quadrat'] = $wUmsaetze[$key]*$wUmsaetze[$key];
 			$ges_x_qu += $subpopulation[$i]['x-quadrat'];
-			$subpopulation[$i]['x*y'] = $wochenUmsaetze[$key]*$wochenUmsaetze[$folgeKW];
+			$subpopulation[$i]['x*y'] = $wUmsaetze[$key]*$wUmsaetze[$folgeKW];
 			$ges_x_mal_y += $subpopulation[$i]['x*y'];
 			$i++;
 		}
@@ -164,16 +163,16 @@ class Auswertung{
 
 	public function getUmsatzFolgewoche($aktuellerWert) {
 		$conn = $this->conn;
-		$umsatzFolgewoche = $this->berechnungLineareRegression($aktuellerWert);
-		$this->umsatzFolgewoche = $umsatzFolgewoche;
-		return $this->umsatzFolgewoche;
+		$UmsatzKommendeW = $this->lineareRegression_calc($aktuellerWert);
+		$this->UmsatzKommendeW = $UmsatzKommendeW;
+		return $this->UmsatzKommendeW;
 	}
 
 	public function getWochenumsatz() {
-		$kalenderWochen = $this->kalenderWochen;
-		$umsaetze = $this->wochenUmsaetze;
-		$this->wochenUmsatzSummen = $this->berechnungUmsatzSummen($kalenderWochen, $umsaetze);
-		return $this->wochenUmsatzSummen;
+		$kws = $this->kws;
+		$umsaetze = $this->wUmsaetze;
+		$this->wUmsatzSum = $this->Umsatzsummen_calc($kws, $umsaetze);
+		return $this->wUmsatzSum;
 	}
 
 
@@ -266,16 +265,16 @@ class Auswertung{
 
 		$akJahr   = idate('Y');
 		$akWoche  = date('W');
-		$ewoche   = date('W', strtotime($this->startdatum));
+		$ewoche   = date('W', strtotime($this->start_datum));
 		$data[][] = null;
 		$h        = 0;
 
 		// Jahresgrenzending
-		$eJahr = date("Y", strtotime($this->startdatum));
-		if (date("m", strtotime($this->startdatum)) == "01" && (date("W", strtotime($this->startdatum)) == 52 || date("W", strtotime($this->startdatum)) == 53)){
+		$eJahr = date("Y", strtotime($this->start_datum));
+		if (date("m", strtotime($this->start_datum)) == "01" && (date("W", strtotime($this->start_datum)) == 52 || date("W", strtotime($this->start_datum)) == 53)){
 			$eJahr--;
 		}    
-		else if (date("m", strtotime($this->startdatum)) == "12" && date("W", strtotime($this->startdatum)) == 01){
+		else if (date("m", strtotime($this->start_datum)) == "12" && date("W", strtotime($this->start_datum)) == 01){
 			$eJahr++;
 		}
 
