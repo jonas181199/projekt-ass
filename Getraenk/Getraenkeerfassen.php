@@ -1,21 +1,20 @@
 <!-- Jonas Schirm -->
 <?php
 
-include_once '../includes/dbh.inc.php'
+include_once '../includes/dbh.inc.php';
+session_start();
 
 ?>
 
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>
-      <!-- HTML-Kopf -->
       <meta charset=“utf-8“>
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Getränkeverwaltung</title>
    </HEAD>
    <BODY>
-      <!-- HTML-Körper -->
       <h1>Getränkeverwaltung</h1>
       <p>
          <a href="../Anmeldung/Markt.php">Zurück zum Markt</a>
@@ -34,12 +33,13 @@ include_once '../includes/dbh.inc.php'
             <p>
                <label for="kategorie">Kategorie: </label>
                   <select name="kategorie" id="kategorie">
-                     <option value="Sonstiges">Sonstiges</option>
+                     <option value="Bitte auswählen" selected>Bitte auswählen</option>
                      <option value="Wasser">Wasser</option>
                      <option value="Saft">Saft</option>
                      <option value="Limonade">Limonade</option>
                      <option value="Wein">Wein</option>
                      <option value="Bier">Bier</option>
+                     <option value="Sonstiges">Sonstiges</option>
                   </select>
             </p>
             <p>

@@ -8,14 +8,12 @@ include_once '../includes/dbh.inc.php'
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>
-      <!-- HTML-Kopf -->
       <meta charset=“utf-8“>
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Hinzufügen eines Getränks</title>
    </HEAD>
    <BODY>
-      <!-- HTML-Körper -->
       <?php
          $gname = mysqli_real_escape_string($conn, $_POST['gname']);
          $ghersteller = mysqli_real_escape_string($conn, $_POST['ghersteller']);
@@ -28,21 +26,41 @@ include_once '../includes/dbh.inc.php'
                return;
          }
 
-         $sql = "SELECT insertgetraenke('$ghersteller', '$gname', '$kategorie', $preis)";
+         $stmt = $conn->prepare("SELECT insertgetraenk(?, ?, ?, ?) AS insertgetraenk");
+         $stmt->bind_param("sssi", $_SESSION[$ghersteller], $_SESSION[$gname], $_SESSION[$kategorie], $_SESSION[$preis]);
+         $stmt->execute();
+         $result = $stmt->get_result();
+         $insertErgebnis = $result->fetch_object();
+         echo $insertErgebnis->insertgetraenk;
+         
+         if($insertErgebnis->insertgetraenk == 0){
+            echo "Das Getränk wurde hinzugefügt";
+            return;
+         } 
+         if ($insertErgebnis->insertgetraenk == 1){
+            echo "Der Preis muss größer 0,00 sein";
+            return;
+         }
+         if ($insertErgebnis->insertgetraenk == 2){
+            echo "Das Getränk in der Kombination Name, Hersteller ist bereits vorhanden.";
+            return;
+         }
+         
 
-         // /* $sql = "insert into getraenke (gname, ghersteller, kategorie, preis) values ('" . $gname. "', '" . $ghersteller. "', '" . $kategorie. "', '" . $preis. "')";   */
-         // if ($conn->query($sql) == false){
-         //    echo "Fehler <br>";
-         //    if(mysqli_errno($conn) == 1062){ //Catch Duplicate Key
-         //       echo "Das Getränk ist bereits vorhanden";
-         //    } else {
-         //       echo $conn->error;
-         //    }
-         // }
-         // else {
-         //    echo "Das Getränk wurde erfolgreich der Datenbank hinzugefügt";
-         // }
-         // $conn->close(); */
+         /* $sql = "insert into getraenke (gname, ghersteller, kategorie, preis) values ('" . $gname. "', '" . $ghersteller. "', '" . $kategorie. "', '" . $preis. "')";
+          if ($conn->query($sql) == false){
+             echo "Fehler <br>";
+             if(mysqli_errno($conn) == 1062){ //Catch Duplicate Key
+                echo "Das Getränk ist bereits vorhanden";
+             } else {
+                echo $conn->error;
+             }
+          }
+          else {
+             echo "Das Getränk wurde erfolgreich der Datenbank hinzugefügt";
+          }
+          $conn->close();
+          */ 
          ?>
 
       <form action="Getraenkeerfassen.php">
