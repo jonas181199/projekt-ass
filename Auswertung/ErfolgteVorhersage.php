@@ -1,3 +1,4 @@
+<!-- Jonas Schirm -->
 <?php
     session_start();
     include_once '../classes/auswertung.php';
