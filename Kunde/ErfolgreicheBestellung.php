@@ -47,7 +47,7 @@
       $strasse      = mysqli_real_escape_string($conn, $_POST['strasse']);
       $hausnummer   = mysqli_real_escape_string($conn, $_POST['hausnummer']);
       $kkennwort_un = mysqli_real_escape_string($conn, $_POST['kkennwort']);
-      $kkennwort    = password_hash($kkennwort_un, PASSWORD_DEFAULT);
+      $kkennwort    = password_hash($kkennwort_un, PASSWORD_BCRYPT);
       $kunde = new registrierungKundeKl($email, $kname, $plz, $ort, $strasse, $hausnummer, $kkennwort, $conn);
 
       //Prüfen, ob alle Felder befüllt wurden

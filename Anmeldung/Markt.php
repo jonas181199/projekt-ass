@@ -12,7 +12,7 @@
    
 
    //Prüfungen, wenn der Benutzer von der Marktanmeldung-Seite kommt
-   if (isset($_POST['loginmarkt'])){ 
+   if (isset($_POST['loginmarkt']) AND !isset($_SESSION['mid'])){ 
       $mid = mysqli_real_escape_string($conn, $_POST['mid']);
       $markt = new anmeldungMarktKl($mid, $_POST['mpasswort'], $conn);
    
@@ -34,15 +34,14 @@
          $conn->close();
          return;
       }  
-      unset($_POST['loginmarkt']);
    }
    //Prüfungen, wenn der Benutzer von der Marktregistrierung-Seite kommt
-   elseif(isset($_POST['registrieremarkt'])){
+   elseif(isset($_POST['registrieremarkt']) AND !isset($_SESSION['mid'])){
       $mid          = mysqli_real_escape_string($conn, $_POST['mid']);
       $mname        = mysqli_real_escape_string($conn, $_POST['mname']);
       $mpasswort_un = mysqli_real_escape_string($conn, $_POST['mpasswort']);
       $mpasswort    = password_hash($mpasswort_un, PASSWORD_BCRYPT);
-      $markt = new registrierungMarktKl($mid, $mname, $_POST['mpasswort'], $conn);
+      $markt = new registrierungMarktKl($mid, $mname, $mpasswort, $conn);
       
       //Prüfen, ob alle Felder befüllt wurden
       if (!$markt->alleFelderBelegt()){
@@ -68,7 +67,6 @@
          $conn->close();
          return;
       } 
-      unset($_POST['registrieremarkt']);
       echo "Ihr Markt wurde erfolgreich erstellt.";
    }
 
