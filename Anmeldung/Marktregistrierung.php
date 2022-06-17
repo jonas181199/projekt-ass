@@ -1,8 +1,6 @@
 <!-- Dies ist eine gemeinsame Leistung der Gruppe -->
-<?php
-   include_once '../includes/dbh.inc.php';
-?>
-
+<!-- Beschreibung:
+     Der Nutzer kann hier sämtliche Daten eingeben, die für seine Registrierung benötigt werden und anschließend die Bestellung tätigen-->
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>

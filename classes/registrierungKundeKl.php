@@ -1,4 +1,7 @@
 <!-- Julian Alber -->
+<!-- Beschreibung:
+     Diese Klasse stellt die einzelnen Funktionen zur Verfügung, die benötigt werden die eingegebenen Daten des Nutzer 
+     bei einer Kundenregistrierung zu überprüfen -->
 <?php
     include_once '../includes/dbh.inc.php'
 ?>

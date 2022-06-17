@@ -1,8 +1,8 @@
 <!-- Dies ist eine gemeinsame Leistung der Gruppe -->
-<?php
-   include_once '../includes/dbh.inc.php';
-?>
-
+<!-- Beschreibung:
+     Zur Nutzung des Marktportales muss sich der Nutzer erst anmelden.
+     Dafür wird ein Passwort und seine Markt-ID benötigt.
+     Sollte er noch nicht registriert sein, kann er auch zur Registrierungsoberfläche wechseln-->
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>

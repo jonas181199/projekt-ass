@@ -7,6 +7,10 @@
 ?>
 
 <!-- Julian Alber -->
+<!-- Beschreibung:
+     Nach einer erfolgreichen Prüfung muss der Kunde sich anmelden, um die Bestellung täiigen zu können.
+     Dafür wird ein Passwort und seine E-Mail benötigt.
+     Sollte er noch nicht registriert sein, kann er auch zur Registrierungsoberfläche wechseln-->
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>

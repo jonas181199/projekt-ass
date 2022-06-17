@@ -77,6 +77,11 @@
 ?>
 
 <!-- Dies ist eine gemeinsame Leistung der Gruppe -->
+<!-- Beschreibung:
+     Die vom Benutzer eingegeben Daten werden (Abhängig davon, ob er sich registrieren oder anmelden möchte) überprüft 
+     und bei Korrekter Eingabe sämtlicher Daten wird der Zugang zu dieser Seite gewährt. 
+     Er kann anschließend zur Lagerverwaltung, zur Getränkeerfassung oder zur Auswertung wechseln.
+     Im Falle einer erfolgreichen Registierung wird der neue Kunde noch der Datenbank hinzugefügt.  -->
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>

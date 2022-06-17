@@ -13,6 +13,9 @@
 ?>
 
 <!-- Julian Alber -->
+<!-- Beschreibung:
+     Dem Nutzer werden genau so viele Eingabefelder für Bestellpositionen angezeigt wie er zuvor eingegeben hat
+     Dieser kann über Drop-Down Listen jeweils das Getränk und den Hersteller und die gewünschte Anzahl auswählen -->
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>

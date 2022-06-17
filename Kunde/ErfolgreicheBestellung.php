@@ -77,6 +77,10 @@
 ?>
 
 <!-- Julian Alber -->
+<!-- Beschreibung:
+     Die vom Benutzer eingegeben Daten werden (Abhängig davon, ob er sich registrieren oder anmelden möchte) überprüft 
+     und bei Korrekter Eingabe sämtlicher Daten die Bestellung abgeschlossen und in der Datenbank gespeichert.
+     Im Falle einer erfolgreichen Registierung wird der neue Kunde noch der Datenbank hinzugefügt.  -->
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>

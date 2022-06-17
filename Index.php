@@ -1,4 +1,7 @@
 <!-- Julian Alber -->
+<!-- Beschreibung:
+     Der Nutzer kann zu Beginn die Markt ID des Marktes bei dem er etwas Bestellen möchte und die Anzahl an Bestelpositionen eingeben
+     Alternativ kann er auch zur Marktanmeldung wechseln -->
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>

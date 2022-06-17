@@ -1,4 +1,7 @@
 <!-- Dies ist eine gemeinsame Leistung der Gruppe -->
+<!-- Beschreibung:
+     Diese Klasse stellt die einzelnen Funktionen zur Verfügung, die benötigt werden die eingegebenen Daten des Nutzer 
+     bei einer Marktregistrierung zu überprüfen -->
 <?php
     include_once '../includes/dbh.inc.php'
 ?>

@@ -9,6 +9,10 @@
 ?>
 
 <!-- Julian Alber -->
+<!-- Beschreibung:
+     Die vom Nutzer eingegebenen Bestellpositionen werden geprüft, ob er sämtliche geforderten Felder ausgefüllt hat
+     ob die Getränke-Hersteller Kombination existiert und ob die Lagerbestände ausreichen.
+     Sind diese Prüfungen erfolgreich, kann er die Bestellung abschließen, ansonsten wird eine Fehlermeldung angezeigt-->
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>

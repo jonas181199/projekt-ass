@@ -1,4 +1,7 @@
 <!-- Julian Alber -->
+<!-- Beschreibung:
+     Diese Klasse stellt die einzelnen Funktionen zur Verfügung, die dazu benötigt werden die eingegebene Bestellung 
+     und die Eingegeben Bestellpositionen der Datenbank hinzuzufügen -->
 <?php
     include_once '../includes/dbh.inc.php'
 ?>
