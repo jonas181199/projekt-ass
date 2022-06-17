@@ -16,6 +16,9 @@
 ?>
 
 <!-- Julian Alber -->
+<!-- Beschreibung:
+	   In einer Tabelle werden die statistische Werte (Gesamtumsatz, Größte Bestellung, Standardabweichung und Median aller Bestellungen)
+	   je Kalenderwoche angezeigt. -->
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>

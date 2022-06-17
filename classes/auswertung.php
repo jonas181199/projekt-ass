@@ -2,6 +2,9 @@
     include_once '../includes/dbh.inc.php'
 ?>
 
+<!-- Beschreibung:
+	Diese Klasse stellt die einzelnen Funktionen zur Verfügung, die dazu benötigt werden die Auswertungen für die Getränkemarkt-Anwendung
+	zu realisieren. -->
 <?php 
 	class Auswertung {
 
@@ -18,40 +21,50 @@
 
 		/** Jonas Schirm */
 		//Berechnung der Lineare Regression zur Umsatzprognose der aktuellen Woche folgenden Woche
-		public function lineareRegression_calc ($aktuellerWert) {
+		//Für die Berechnung der linearen Regression wurde ein Zeitraum in die Vergangenheit von 16 Wochen festgelegt
+		public function lineareRegression_calc($aktuellerWert) {
 			$conn = $this->conn;
+			//aktuelles Jahr ermitteln
 			$akJahr   = idate('Y');
+			//Jahr des Datums minus 16 W ermitteln
 			$eJahr    = date('Y', strtotime("-16 weeks"));
 			$akWoche  = date('W');
+			//Jahr des Datums minus 16 W ermitteln
 			$ewoche   = date('W', strtotime("-16 weeks"));
 			$this->start_datum = date("Y-m-d", strtotime("{$eJahr}-W{$ewoche}"));
 			$data = [];
 			$h    = 0;
 
-
-			//Jahresgrenzending
+			//Wenn es die 52. oder die 53. Woche ist, das Jahr aber schon das neue, wird das Jahr des eingegebenen Datums dekrementiert, um den richtigen Wert zu erhalten
 			if (date("m", strtotime($this->start_datum)) == "01" && (date("W", strtotime($this->start_datum)) == 52 || date("W", strtotime($this->start_datum)) == 53)){
 				$eJahr--;
-			}    
+			}
+			//Wenn es die 1. Woche ist, das Jahr aber noch das alte, wird das Jahr des eingegebenen Datums inkrementiert, um den richtigen Wert zu erhalten    
 			else if (date("m", strtotime($this->start_datum)) == "12" && date("W", strtotime($this->start_datum)) == 01){
 				$eJahr++;
 			}
 
-			//
+			//Sämtliche Jahre -16 W bis zum heutigen Datum durchlaufen
 			for($j = $eJahr; $j <= $akJahr; $j++)  {
 
+				//Wochenzahl der Woche ermitteln, bis zu der das jeweilige Jahr durchlaufen werden müssen 
+				//Ist das Jahr das aktuell durchlaufen wird nicht das aktuelle Jahr ist dies die Gesamtanzahl der Wochen des Jahres
 				if($j < $akJahr) {
 					$anzW = idate('W', mktime(0, 0, 0, 12, 28, $j));
+				
+				//Ist es das aktuelle Jahr entspricht es der Wochenzahl der aktuellen Woche
 				} elseif($j == $akJahr)  {
 					$anzW = $akWoche;
 				}
 
-				for($i = $ewoche+1; $i <= $anzW; $i++) {
+				//Sämtliche Wochen des Jahres innerhalb des gegebenen Zeitraumes durchgehen
+				for($i = $ewoche + 1; $i <= $anzW; $i++) {
 
+					//Start- und Endtag der jeweiligen Woche berechnen und KW setzen 
 					$timestamp_montag  = date("Y-m-d", strtotime("{$j}-W{$i}"));
 					$timestamp_sonntag = date("Y-m-d", strtotime("{$j}-W{$i}-7"));                                 
 					
-					//Gesamtumsatz
+					//Gesamtumsatz der jeweiligen Woche berechnen
 					$data[$h]['Gesamtumsatz'] = $this->getGesamtumsatz($timestamp_montag, $timestamp_sonntag);
 
 					$h++;
@@ -69,19 +82,20 @@
 				$hilfsarray[$i]['Woche'] = $key;
 				$hilfsarray[$i]['Umsatz x'] = $value['Gesamtumsatz'];
 				$gesamtx += $hilfsarray[$i]['Umsatz x'];
-				$hilfsarray[$i]['nachfolgenderUmsatz y'] = $data[$i+1]['Gesamtumsatz'];
-				$gesamty += $hilfsarray[$i]['nachfolgenderUmsatz y'];
-				$hilfsarray[$i]['x-quadrat'] = $value['Gesamtumsatz'] * $value['Gesamtumsatz'];
-				$quadratgesamtx += $hilfsarray[$i]['x-quadrat'];
-				$hilfsarray[$i]['x*y'] = $value['Gesamtumsatz'] * $data[$i+1]['Gesamtumsatz'];
-				$produktxy += $hilfsarray[$i]['x*y'];
+				$hilfsarray[$i]['KommenderUmsatz y'] = $data[$i+1]['Gesamtumsatz'];
+				$gesamty += $hilfsarray[$i]['KommenderUmsatz y'];
+				$hilfsarray[$i]['xquadratiert'] = $value['Gesamtumsatz'] * $value['Gesamtumsatz'];
+				$quadratgesamtx += $hilfsarray[$i]['xquadratiert'];
+				$hilfsarray[$i]['x * y'] = $value['Gesamtumsatz'] * $data[$i+1]['Gesamtumsatz'];
+				$produktxy += $hilfsarray[$i]['x * y'];
 				$i++;
-				//Indexposition 15->W16->akt Woche soll nicht eingerechnet werden
+				//Indexposition 15-> W16- >aktWoche soll nicht eingerechnet werden
 				if($i==14){
 					break;
 				}
 			}
 			
+			//16 Wochen als Zeitraum für die lineare Regression
 			$arithmetischesmittelx    = (float) $gesamtx / 16;
 			$arithmetischesmittely    = (float) $gesamtx / 16;
 			$arithmetischesmittelxx = (float) $arithmetischesmittelx * $arithmetischesmittelx;
@@ -227,7 +241,7 @@
 
 				//Sämtliche Wochen des Jahres innerhalb des gegebenen Zeitraumes durchgehen
 				//eWoche entspricht der Woche ab der im jeweiligen Jahr begonnen werden muss
-				//anzW ist die in Zeilen 220-226 ermittelt Woche bis zu der das Jahr durchchlaufen werden muss
+				//anzW ist die in Zeilen 232-238 ermittelt Woche bis zu der das Jahr durchchlaufen werden muss
 				for($i = $ewoche; $i <= $anzW; $i++) {
 
 					//Start- und Endtag der jeweiligen Woche berechnen und KW setzen 

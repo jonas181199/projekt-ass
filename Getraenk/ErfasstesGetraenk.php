@@ -1,6 +1,8 @@
 <?php
    include_once '../includes/dbh.inc.php';
    session_start();
+
+   //Nur wenn als Markt angemeldet Zugang zu dieser Seite und wenn zuvor ein Getränk hinzugefügt wurde.
    if (empty($_SESSION['mid']) OR !isset($_POST['ghinzufuegen'])) {
       header('Location: ../Anmeldung/Marktanmeldung.php');
       exit;

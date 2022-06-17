@@ -7,6 +7,9 @@
 ?>
 
 <!-- Noah Schöne -->
+<!-- Beschreibung:
+	   Durch Eingabe eines Datums und einer Kategorie ist es möglich statistische Werte (Gesamtumsatz, Größte Bestellung, Standardabweichung und Median aller Bestellungen)
+	   je Kalenderwoche zu berechnen. Wenn keine Kategorie spezifisch ausgewählt wird, findet die Auswertung für alle Kategorien statt. -->
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>

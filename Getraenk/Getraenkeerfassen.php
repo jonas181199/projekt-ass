@@ -1,6 +1,7 @@
 <?php
    include_once '../includes/dbh.inc.php';
    session_start();
+   //Nur wenn als Markt angemeldet Zugang zu dieser Seite
    if (empty($_SESSION['mid'])) {
       header('Location: ../Anmeldung/Marktanmeldung.php');
       exit;

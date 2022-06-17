@@ -1,15 +1,19 @@
-<!-- Jonas Schirm -->
 <?php
     session_start();
     include_once '../classes/auswertung.php';
     include_once '../includes/dbh.inc.php';
 
+    //Nur wenn als Markt angemeldet Zugang zu dieser Seite
     if (empty($_SESSION['mid'])) {
         header('Location: ../Anmeldung/Marktanmeldung.php');
         exit;
      }
 ?>
 
+<!-- Jonas Schirm -->
+<!-- Beschreibung:
+	   Die Umsatzprognose für die kommende Woche wird angezeigt.
+       Wenn eine Kategorie ausgewählt wurde, wird die Umsatzprognose für diese Kategorie durchgeführt. -->
 <?php
 if(isset($_POST['vorhersage'])){
     $eingabe_datum = date('Y-m-d');

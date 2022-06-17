@@ -1,5 +1,7 @@
 <?php
    session_start();
+   
+   //Nur wenn als Markt angemeldet Zugang zu dieser Seite
    if (empty($_SESSION['mid'])) {
       header('Location: ../Anmeldung/Marktanmeldung.php');
       exit;
@@ -7,6 +9,9 @@
 ?>
 
 <!-- Noah Schöne -->
+<!-- Beschreibung:
+	   Die Umsatzprognose kann für alle Kategorie oder für eine bestimmte Kategorie durchgeführt werden.
+      Mit Auswahl des Buttons "Jetzt vorhersagen" wird die Umsatzprognose durchgeführt. -->
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>
