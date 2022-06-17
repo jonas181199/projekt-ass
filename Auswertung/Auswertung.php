@@ -1,7 +1,11 @@
-<?php
-
+<?php  
+    if (empty($_SESSION['mid'])) {
+      header('Location: ../Anmeldung/Marktanmeldung.php');
+      exit;
+   }
 ?>
 
+<!-- Noah Schöne -->
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>

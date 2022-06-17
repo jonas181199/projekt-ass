@@ -31,7 +31,7 @@
             </p>
          </fieldset>
       </form>
-<br>
+      <br>
       <form action="../projekt-ass/Marktregistrierung.php">
          <fieldset>
             <legend>Wenn Sie neu auf dem Portal sind, können Sie sich hier registrieren</legend>
