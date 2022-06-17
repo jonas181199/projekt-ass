@@ -29,6 +29,7 @@ class Auswertung {
 		$data = [];
 		$h    = 0;
 
+
 		//Jahresgrenzending
 		if (date("m", strtotime($this->start_datum)) == "01" && (date("W", strtotime($this->start_datum)) == 52 || date("W", strtotime($this->start_datum)) == 53)){
 			$eJahr--;
@@ -37,7 +38,9 @@ class Auswertung {
 			$eJahr++;
 		}
 
+		//
 		for($j = $eJahr; $j <= $akJahr; $j++)  {
+
 			if($j < $akJahr) {
 				$anzW = idate('W', mktime(0, 0, 0, 12, 28, $j));
 			} elseif($j == $akJahr)  {
@@ -45,11 +48,13 @@ class Auswertung {
 			}
 
 			for($i = $ewoche+1; $i <= $anzW; $i++) {
+
 				$timestamp_montag  = date("Y-m-d", strtotime("{$j}-W{$i}"));
 				$timestamp_sonntag = date("Y-m-d", strtotime("{$j}-W{$i}-7"));                                 
 				
 				//Gesamtumsatz
 				$data[$h]['Gesamtumsatz'] = $this->getGesamtumsatz($timestamp_montag, $timestamp_sonntag);
+
 				$h++;
 			}
 			$ewoche = 1;
@@ -65,12 +70,12 @@ class Auswertung {
 			$hilfsarray[$i]['Woche'] = $key;
 			$hilfsarray[$i]['Umsatz x'] = $value['Gesamtumsatz'];
 			$gesamtx += $hilfsarray[$i]['Umsatz x'];
-			$hilfsarray[$i]['KommenderUmsatz y'] = $data[$i+1]['Gesamtumsatz'];
-			$gesamty += $hilfsarray[$i]['KommenderUmsatz y'];
-			$hilfsarray[$i]['xquadriert'] = $value['Gesamtumsatz'] * $value['Gesamtumsatz'];
-			$quadratgesamtx += $hilfsarray[$i]['xquadriert'];
-			$hilfsarray[$i]['x * y'] = $value['Gesamtumsatz'] * $data[$i+1]['Gesamtumsatz'];
-			$produktxy += $hilfsarray[$i]['x * y'];
+			$hilfsarray[$i]['nachfolgenderUmsatz y'] = $data[$i+1]['Gesamtumsatz'];
+			$gesamty += $hilfsarray[$i]['nachfolgenderUmsatz y'];
+			$hilfsarray[$i]['x-quadrat'] = $value['Gesamtumsatz'] * $value['Gesamtumsatz'];
+			$quadratgesamtx += $hilfsarray[$i]['x-quadrat'];
+			$hilfsarray[$i]['x*y'] = $value['Gesamtumsatz'] * $data[$i+1]['Gesamtumsatz'];
+			$produktxy += $hilfsarray[$i]['x*y'];
 			$i++;
 			//Indexposition 15->W16->akt Woche soll nicht eingerechnet werden
 			if($i==14){
@@ -82,7 +87,7 @@ class Auswertung {
 		$arithmetischesmittely    = (float) $gesamtx / 16;
 		$arithmetischesmittelxx = (float) $arithmetischesmittelx * $arithmetischesmittelx;
 
-		//Regressionsgerade y
+		// Berechnung der Regressionsgeraden y
 		$dividend = $produktxy - 16 * $arithmetischesmittelx * $arithmetischesmittely;
 		$divisor = $quadratgesamtx - 16 * $arithmetischesmittelxx;
 		$y = 0;

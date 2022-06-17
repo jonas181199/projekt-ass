@@ -1,5 +1,6 @@
 <!-- Jonas Schirm -->
 <?php
+
 include_once '../includes/dbh.inc.php';
 session_start();
 if ((empty($_SESSION['mid']) OR !isset($_POST['ghinzufuegen']))) {
@@ -26,8 +27,8 @@ if ((empty($_SESSION['mid']) OR !isset($_POST['ghinzufuegen']))) {
 
          //Prüfen, ob alle Felder befüllt
          if(empty($gname) || empty($ghersteller) || empty($kategorie) || empty($preis)){
-            echo "Bitte füllen Sie die erforderlichen Felder aus!";
-            return;
+               echo "Bitte füllen Sie die erforderlichen Felder aus!";
+               return;
          }
 
          //Stored Function (insertgetraenke) aufrufen
@@ -36,20 +37,7 @@ if ((empty($_SESSION['mid']) OR !isset($_POST['ghinzufuegen']))) {
          $stmt->execute();
          $result = $stmt->get_result();
          $insertErgebnis = $result->fetch_object();
-      ?>
-
-         <form action="Getraenkeerfassen.php">
-            <p>
-               <input type="submit" name="gerfassen" value="Erfassen Sie ein weiteres Getränk">
-            </p>
-         </form>
-         <form action="../Anmeldung/Markt.php">
-            <p>
-               <input type="submit" name="markt" value="Zurück zu den Funktionen des Markts">
-            </p>
-         </form>
-
-      <?php
+        
          //Fehlerbehandlung Stored Function (insertgetraenke)
          if($insertErgebnis->insertgetraenk == 0){
             echo "Das Getränk wurde hinzugefügt";
@@ -78,7 +66,21 @@ if ((empty($_SESSION['mid']) OR !isset($_POST['ghinzufuegen']))) {
              echo "Das Getränk wurde erfolgreich der Datenbank hinzugefügt";
           }
           $conn->close();
-         */
-      ?>
+         */ 
+         ?>
+
+      <form action="Getraenkeerfassen.php">
+         <p>
+            <input type="submit" name="gerfassen" value="Erfassen Sie ein weiteres Getränk">
+         </p>
+      </form>
+
+      <form action="../Anmeldung/Markt.php">
+         <p>
+            <input type="submit" name="markt" value="Zurück zu den Funktionen des Markts">
+         </p>
+      </form>
+
+
    </BODY>
 </HTML>
