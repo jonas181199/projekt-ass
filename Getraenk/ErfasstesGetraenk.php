@@ -32,9 +32,12 @@
          $preis = mysqli_real_escape_string($conn, $_POST['preis']);
 
          //Prüfen, ob alle Felder befüllt
-         if(empty($gname) || empty($ghersteller) || empty($kategorie) || empty($preis)){
-               echo "Bitte füllen Sie die erforderlichen Felder aus!";
-               return;
+         if(!isset($gname) || strlen($gname) == 0 || 
+         !isset($ghersteller) || strlen($ghersteller) == 0 || 
+         !isset($kategorie) || strlen($kategorie) == 0 ||
+         !isset($preis) || strlen($preis) == 0){
+            echo "Bitte füllen Sie die erforderlichen Felder aus!";
+            return;
          }
 
          //Stored Function (insertgetraenke) aufrufen
@@ -65,29 +68,13 @@
             return;
          } 
          if ($insertErgebnis->insertgetraenk == 1){
-            echo "Der Preis muss größer 0,00 sein";
+            echo "Der Preis muss größer 0.00 sein";
             return;
          }
          if ($insertErgebnis->insertgetraenk == 2){
             echo "Das Getränk in der Kombination Getränkename, Getränkehersteller ist bereits vorhanden.";
             return;
          }
-         
-         //Möglichkeit eines Inserts ohne Stored Function
-         /* $sql = "insert into getraenke (gname, ghersteller, kategorie, preis) values ('" . $gname. "', '" . $ghersteller. "', '" . $kategorie. "', '" . $preis. "')";
-          if ($conn->query($sql) == false){
-             echo "Fehler <br>";
-             if(mysqli_errno($conn) == 1062){ //Catch Duplicate Key
-                echo "Das Getränk ist bereits vorhanden";
-             } else {
-                echo $conn->error;
-             }
-          }
-          else {
-             echo "Das Getränk wurde erfolgreich der Datenbank hinzugefügt";
-          }
-          $conn->close();
-         */ 
          ?>
 
 

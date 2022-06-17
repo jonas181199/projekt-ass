@@ -42,8 +42,7 @@
             <p>
                <label for="kategorie">Kategorie: </label>
                   <select name="kategorie" id="kategorie">
-                     <option value="Bitte auswählen" selected>Bitte auswählen</option>
-                     <option value="Wasser">Wasser</option>
+                     <option value="Wasser" selected>Wasser</option>
                      <option value="Saft">Saft</option>
                      <option value="Limonade">Limonade</option>
                      <option value="Wein">Wein</option>
