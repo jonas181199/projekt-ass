@@ -1,4 +1,7 @@
 <!-- Noah Schöne -->
+<!-- Beschreibung:
+     Diese Klasse stellt die einzelnen Funktionen zur Verfügung, die benötigt werden die eingegebenen Daten des Nutzer 
+     bei der Lageraktualisierung zu überprüfen und diese durchzuführen-->
 <?php
     include_once '../includes/dbh.inc.php' 
 ?>

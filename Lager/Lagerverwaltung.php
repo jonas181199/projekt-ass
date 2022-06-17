@@ -10,6 +10,9 @@
 ?>
 
 <!-- Noah Schöne -->
+<!-- Beschreibung:
+     Dem Marktverantwortlichen werden Drop-Down Felder für die Getränkehersteller und die jeweiligen Getränke angezeigt, sowie ein Eingabefeld für den Lagerbestand.
+     Darunter kann der Nutzer den aktuellen Lagerbestand in Form einer Tabelle einsehen. -->
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>

@@ -10,6 +10,9 @@
 ?>
 
 <!-- Noah Schöne -->
+<!-- Beschreibung:
+     Der Marktverantwortliche ehält eine Rückmeldung zu seiner Lagerbestandsaktualisierung.
+     Ebenso bekommt er die Option den Lagerbestand weiter anzupassen, oder zu den Grundfunktionen des Marktes zurückzukehren -->
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>
