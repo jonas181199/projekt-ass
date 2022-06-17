@@ -23,6 +23,7 @@
    </HEAD>
    <BODY>
       <?php
+         //Variablen erzeugen
          $gname = mysqli_real_escape_string($conn, $_POST['gname']);
          $ghersteller = mysqli_real_escape_string($conn, $_POST['ghersteller']);
          $kategorie = mysqli_real_escape_string($conn, $_POST['kategorie']);
@@ -40,7 +41,22 @@
          $stmt->execute();
          $result = $stmt->get_result();
          $insertErgebnis = $result->fetch_object();
-        
+         ?>
+
+         <!-- Weiterleitung -->
+         <form action="Getraenkeerfassen.php">
+            <p>
+               <input type="submit" name="gerfassen" value="Erfassen Sie ein weiteres Getränk">
+            </p>
+         </form>
+
+         <form action="../Anmeldung/Markt.php">
+            <p>
+               <input type="submit" name="markt" value="Zurück zu den Funktionen des Markts">
+            </p>
+         </form>
+
+         <?php
          //Fehlerbehandlung Stored Function (insertgetraenke)
          if($insertErgebnis->insertgetraenk == 0){
             echo "Das Getränk wurde hinzugefügt";
@@ -51,11 +67,11 @@
             return;
          }
          if ($insertErgebnis->insertgetraenk == 2){
-            echo "Das Getränk in der Kombination Name, Hersteller ist bereits vorhanden.";
+            echo "Das Getränk in der Kombination Getränkename, Getränkehersteller ist bereits vorhanden.";
             return;
          }
          
-         //Möglichkeit eines Inserts ohne Stored Procedure
+         //Möglichkeit eines Inserts ohne Stored Function
          /* $sql = "insert into getraenke (gname, ghersteller, kategorie, preis) values ('" . $gname. "', '" . $ghersteller. "', '" . $kategorie. "', '" . $preis. "')";
           if ($conn->query($sql) == false){
              echo "Fehler <br>";
@@ -72,17 +88,7 @@
          */ 
          ?>
 
-      <form action="Getraenkeerfassen.php">
-         <p>
-            <input type="submit" name="gerfassen" value="Erfassen Sie ein weiteres Getränk">
-         </p>
-      </form>
 
-      <form action="../Anmeldung/Markt.php">
-         <p>
-            <input type="submit" name="markt" value="Zurück zu den Funktionen des Markts">
-         </p>
-      </form>
 
 
    </BODY>

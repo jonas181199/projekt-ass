@@ -26,6 +26,7 @@
       <p>
          <a href="../Anmeldung/Markt.php">Zurück zum Markt</a>
       </p>
+      <!-- Felder ausfüllen -->
       <form method="POST" action="ErfasstesGetraenk.php">
          <fieldset>
             <legend>Fügen Sie ein neues Getränk hinzu</legend>
@@ -54,6 +55,7 @@
                <input type="number" min="0.00" step="any" name="preis" id="preis">
             </p>
             <p>
+               <!-- Getränk hinzufügen -->
                <input type="submit" name="ghinzufuegen" value="hinzufügen">
             </p>
          </fieldset>      
