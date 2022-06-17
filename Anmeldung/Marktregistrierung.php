@@ -1,4 +1,7 @@
 <!-- Dies ist eine gemeinsame Leistung der Gruppe -->
+<?php
+   session_start();
+?>
 <!-- Beschreibung:
      Der Nutzer kann hier sämtliche Daten eingeben, die für seine Registrierung benötigt werden und anschließend die Bestellung tätigen-->
 <!DOCTYPE HTML>

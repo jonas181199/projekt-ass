@@ -1,4 +1,8 @@
 <!-- Dies ist eine gemeinsame Leistung der Gruppe -->
+<?php
+   session_start();
+?>
+
 <!-- Beschreibung:
      Zur Nutzung des Marktportales muss sich der Nutzer erst anmelden.
      Dafür wird ein Passwort und seine Markt-ID benötigt.

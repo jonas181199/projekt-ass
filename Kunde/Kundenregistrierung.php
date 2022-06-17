@@ -1,4 +1,5 @@
 <?php
+   session_start();
    include_once '../includes/dbh.inc.php';
    if (!isset($_POST['Anmelden'])) {
       header('Location: Kundenanmeldung.php');

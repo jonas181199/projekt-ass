@@ -1,5 +1,6 @@
-<?php  
-    if (empty($_SESSION['mid'])) {
+<?php
+   session_start();
+   if (empty($_SESSION['mid'])) {
       header('Location: ../Anmeldung/Marktanmeldung.php');
       exit;
    }
