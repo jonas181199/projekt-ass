@@ -34,6 +34,7 @@
          $conn->close();
          return;
       }  
+      unset($_POST['loginmarkt']);
    }
    //Prüfungen, wenn der Benutzer von der Marktregistrierung-Seite kommt
    elseif(isset($_POST['registrieremarkt'])){
@@ -67,6 +68,7 @@
          $conn->close();
          return;
       } 
+      unset($_POST['registrieremarkt']);
       echo "Ihr Markt wurde erfolgreich erstellt.";
    }
 

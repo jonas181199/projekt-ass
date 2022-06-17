@@ -188,7 +188,7 @@
 				sort($preisa);
 				$mittelwert = floor(($anzahlElemente -1)/2); //Berechnung des mittigsten Wertes, beziehungsweise der mittigsten Werte
 
-				if($anzahlElemente % 2 == 0 OR $anzahlElemente == 1) { 
+				if($anzahlElemente % 2 != 0 OR $anzahlElemente == 1) { 
 					$median = $preisa[$mittelwert]; //Ungerade Anzahl an Elementen im Array, daher ist der mittigste Wert der Median
 				} else { 
 					$low    = $preisa[$mittelwert]; //Gerade Anzahl an Elementen im Array, daher bildet sich der Median aus dem Mittelwert, der beiden mittigsten Werte

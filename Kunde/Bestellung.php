@@ -2,7 +2,7 @@
     include_once '../includes/dbh.inc.php';
     session_start();
 
-    if ((empty($_SESSION['mid']) OR empty($_SESSION['anzPosition'])) AND !isset($_POST['Bestätigen'])) {
+    if (empty($_POST['mid']) OR empty($_POST['anzPosition']) OR !isset($_POST['Bestätigen'])) {
         header('Location: ../Index.php');
         exit;
     }
@@ -10,6 +10,7 @@
         $_SESSION['anzPosition'] = mysqli_real_escape_string($conn, $_POST['anzPosition']);
         $_SESSION['mid']         = mysqli_real_escape_string($conn, $_POST['mid']);
     }
+    unset($_POST['Bestätigen']);
 ?>
 
 <!-- Julian Alber -->

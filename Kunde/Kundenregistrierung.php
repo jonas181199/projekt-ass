@@ -1,10 +1,11 @@
 <?php
-   session_start();
    include_once '../includes/dbh.inc.php';
-   if (!isset($_POST['Anmelden'])) {
+   session_start();
+   if (!isset($_POST['registrieren'])) {
       header('Location: Kundenanmeldung.php');
       exit;
   }
+  unset($_POST['registrieren']);
 ?>
 
 <!-- Julian Alber -->

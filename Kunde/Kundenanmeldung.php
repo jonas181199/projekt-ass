@@ -4,7 +4,8 @@
    if (!isset($_POST['babschließen'])) {
       header('Location: BestellungPrüfen.php');
       exit;
-  }
+   }
+   unset($_POST['babschließen']);
 ?>
 
 <!-- Julian Alber -->
@@ -42,7 +43,7 @@
          <fieldset>
             <legend>Wenn Sie neu auf dem Portal sind, können Sie sich hier registrieren</legend>
             <p>
-               <input type="submit" name="Anmelden" value="Anmelden">
+               <input type="submit" name="registrieren" value="registrieren">
             </p>
          </fieldset>
       </form>

@@ -5,7 +5,8 @@
    if (!isset($_POST['bPrüfen'])) {
       header('Location: Bestellung.php');
       exit;
-  }
+   }
+   unset($_POST['bPrüfen']);
 ?>
 
 <!-- Julian Alber -->

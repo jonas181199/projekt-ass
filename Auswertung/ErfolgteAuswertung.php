@@ -13,6 +13,7 @@
         header('Location: Auswertung.php');
         exit;
     }
+    unset($_POST['start']);
 ?>
 
 <!-- Julian Alber -->

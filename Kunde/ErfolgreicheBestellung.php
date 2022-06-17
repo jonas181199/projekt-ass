@@ -35,6 +35,7 @@
          $conn->close();
          return;
       } 
+      unset($_POST['loginkunde']);
    }  
    //Prüfungen, wenn der Benutzer von der Kundenregistrierung-Seite kommt
    elseif(isset($_POST['registrierekunde'])){
@@ -68,6 +69,7 @@
          return;
       }
       echo "Ihr Account wurde erfolgreich erstellt!";
+      unset($_POST['registrierekunde']);
    }
 
    //Nach Anmeldung oder Registrierung Kunden-email in Session speichern
