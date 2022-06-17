@@ -42,7 +42,7 @@
 
          //Stored Function (insertgetraenke) aufrufen
          $stmt = $conn->prepare("SELECT insertgetraenk(?, ?, ?, ?) AS insertgetraenk");
-         $stmt->bind_param("sssi", $ghersteller, $gname, $kategorie, $preis);
+         $stmt->bind_param("sssd", $ghersteller, $gname, $kategorie, $preis);
          $stmt->execute();
          $result = $stmt->get_result();
          $insertErgebnis = $result->fetch_object();
