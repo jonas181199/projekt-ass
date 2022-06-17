@@ -4,11 +4,16 @@
     session_start();
 
     if (empty($_SESSION['mid'])) {
-        header('Location: Marktanmeldung.php');
+        header('Location: ../Anmeldung/Marktanmeldung.php');
+        exit;
+    }
+    if (empty($_POST['start'])) {
+        header('Location: Auswertung.php');
         exit;
     }
 ?>
 
+<!-- Julian Alber -->
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>

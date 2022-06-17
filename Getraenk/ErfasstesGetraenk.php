@@ -1,5 +1,5 @@
-<!-- Jonas Schirm -->
 <?php
+<<<<<<< HEAD
 include_once '../includes/dbh.inc.php';
 session_start();
 if ((empty($_SESSION['mid']) OR !isset($_POST['ghinzufuegen']))) {
@@ -7,8 +7,17 @@ if ((empty($_SESSION['mid']) OR !isset($_POST['ghinzufuegen']))) {
    exit;
 }
 
+=======
+   include_once '../includes/dbh.inc.php';
+   session_start();
+   if ((empty($_SESSION['mid']) OR !isset($_POST['ghinzufuegen']))) {
+      header('Location: ../Anmeldung/Marktanmeldung.php');
+      exit;
+   }
+>>>>>>> 34ca4268e559eb60dd6806f905f69a8d7adb65e0
 ?>
 
+<!-- Jonas Schirm -->
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>
@@ -78,7 +87,24 @@ if ((empty($_SESSION['mid']) OR !isset($_POST['ghinzufuegen']))) {
              echo "Das Getränk wurde erfolgreich der Datenbank hinzugefügt";
           }
           $conn->close();
+<<<<<<< HEAD
          */
       ?>
+=======
+         */ 
+         ?>
+
+      <form action="Getraenkeerfassen.php">
+         <p>
+            <input type="submit" name="gerfassen" value="Erfassen Sie ein weiteres Getränk">
+         </p>
+      </form>
+
+      <form action="../Anmeldung/Markt.php">
+         <p>
+            <input type="submit" name="markt" value="Zurück zu den Funktionen des Markts">
+         </p>
+      </form>
+>>>>>>> 34ca4268e559eb60dd6806f905f69a8d7adb65e0
    </BODY>
 </HTML>

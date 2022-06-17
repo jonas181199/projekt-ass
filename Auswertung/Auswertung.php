@@ -1,7 +1,15 @@
 <?php
+    include_once '../includes/dbh.inc.php';
+    include_once '../classes/auswertung.php';
+    session_start();
 
+    if (empty($_SESSION['mid'])) {
+        header('Location: ../Anmeldung/Marktanmeldung.php');
+        exit;
+    }
 ?>
 
+<!-- Noah Schöne -->
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>
