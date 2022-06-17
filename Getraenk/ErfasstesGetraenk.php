@@ -8,6 +8,11 @@
 ?>
 
 <!-- Jonas Schirm -->
+<!-- Beschreibung:
+      Es wird überprüft, dass alle Felder befüllt sind.
+      Das Getränk darf in der Kombination Getränkename und -hersteller noch nicht existieren und muss einen Preis größer 0,00 haben.
+      Für das Hinzufügen in die Datenbank wird eine Stored Function genutzt.
+      Nach Hinzufügen kann der Marktverantwortliche weitere Getränke hinzufügen oder zurück zu den Funktionen des Markts. -->
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>

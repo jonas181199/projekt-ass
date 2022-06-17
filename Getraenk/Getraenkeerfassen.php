@@ -8,6 +8,11 @@
 ?>
 
 <!-- Jonas Schirm -->
+<!-- Beschreibung:
+      Der Marktverantwortliche muss alle Felder befüllen um ein Getränk der Datenbank hinzuzufügen.
+      Die Felder Getränkename und Getränkehersteller sind Freitextfelder. Die Kategorie kann durch eine Dropdown-Liste ausgewählt werden.
+      Der Preis ist mit 2 Dezimalstellen einzugeben.
+      Die Tabelle zeigt an, welche Getränke bereits in der Datenbank vorhanden sind. -->
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>
