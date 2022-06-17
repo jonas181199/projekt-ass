@@ -69,8 +69,10 @@
 
       <!-- Lagertabelle -->
       <?php
-         //Einträge aus der Datenbank holen
+
          $mid = mysqli_real_escape_string($conn, $_SESSION['mid']);
+
+         //Einträge aus der Datenbank holen
          $sql = "SELECT * FROM lager WHERE mid = $mid ORDER BY gname";
          if($result = $conn->query($sql)){
             while($ds = $result->fetch_object()){

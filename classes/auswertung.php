@@ -136,21 +136,21 @@
 			$iavg    = 0;
 			$abw     = 0;
 			$ianz    = 0; 
-
+ 
 			$resultavg = $this->conn->query($savg);
 			$avg       = $resultavg->fetch_object();
 			if (!empty($avg->average)){
-				$iavg = $avg->average; 
+				$iavg = $avg->average;  
 			} 
 
 			$resultpreise = $this->conn->query($spreise);
 			while($preise = $resultpreise->fetch_object()){           
-				$abw += ($preise->gpreis - $iavg) * ($preise->gpreis - $iavg);
+				$abw += ($preise->gpreis - $iavg) * ($preise->gpreis - $iavg); //Berechnung des Verschiebungssatzes
 				$ianz++;
 			}  
 
 			if($ianz > 1){	                 
-				$result = sqrt((1 / ($ianz - 1)) * $abw);
+				$result = sqrt((1 / ($ianz - 1)) * $abw); //Berechnung der Standardabweichung
 				return $result;
 			} else{
 				return 0;
@@ -170,14 +170,14 @@
 			}
 
 			if ($k != 0){
-				$anzahlElemente = count($preisa);
+				$anzahlElemente = count($preisa); //Anzahl der Elemente im Array
 				sort($preisa);
-				$mittelwert = floor(($anzahlElemente -1)/2); 
+				$mittelwert = floor(($anzahlElemente -1)/2); //Berechnung des mittigsten Wertes, beziehungsweise der mittigsten Werte
 
 				if($anzahlElemente % 2 == 0 OR $anzahlElemente == 1) { 
-					$median = $preisa[$mittelwert];
+					$median = $preisa[$mittelwert]; //Ungerade Anzahl an Elementen im Array, daher ist der mittigste Wert der Median
 				} else { 
-					$low    = $preisa[$mittelwert];
+					$low    = $preisa[$mittelwert]; //Gerade Anzahl an Elementen im Array, daher bildet sich der Median aus dem Mittelwert, der beiden mittigsten Werte
 					$high   = $preisa[$mittelwert+1];
 					$median = (($low+$high)/2);
 				}
