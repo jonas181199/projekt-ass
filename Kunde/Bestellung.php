@@ -1,6 +1,5 @@
 <?php
     include_once '../includes/dbh.inc.php';
-
     session_start();
 
     if ((empty($_SESSION['mid']) OR empty($_SESSION['anzPosition'])) AND !isset($_POST['Bestätigen'])) {
@@ -10,10 +9,11 @@
 
     if (isset($_POST['Bestätigen'])){
         $_SESSION['anzPosition'] = mysqli_real_escape_string($conn, $_POST['anzPosition']);
-        $_SESSION['mid'] = mysqli_real_escape_string($conn, $_POST['mid']);
+        $_SESSION['mid']         = mysqli_real_escape_string($conn, $_POST['mid']);
     }
 ?>
 
+<!-- Julian Alber -->
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>
