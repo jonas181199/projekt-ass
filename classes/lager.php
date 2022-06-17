@@ -1,9 +1,6 @@
 <!-- Noah Schöne -->
 <?php
-
-    include_once '../includes/dbh.inc.php'
-
-    
+    include_once '../includes/dbh.inc.php' 
 ?>
 
 <?php 
@@ -13,6 +10,7 @@ class Lager {
     private $gname;
     private $ghersteller;
     private $lagerbest;
+    private $conn;
 
 
     function __construct($mid, $gname, $ghersteller, $lagerbest, $conn)    {
@@ -25,31 +23,31 @@ class Lager {
 
     function replaceLagerbestand()  {
 
-         $gname = mysqli_real_escape_string($this->conn, $_POST['gname']);
-         $ghersteller = mysqli_real_escape_string($this->conn, $_POST['ghersteller']);
-         $lagerbest = mysqli_real_escape_string($this->conn, $_POST['lagerbest']);
-   
-         //Prüfen, ob alle Felder befüllt
-         if(empty($gname) || empty($ghersteller) || empty($lagerbest)){
-            echo "Bitte füllen Sie die erforderlichen Felder aus!";
-            return;
-         } 
-         
-         //Prüfen, ob Getränk-Hersteller Kombination existiert
-         $getraenk = $this->conn->query("select * from getraenke where gname = '$gname' AND ghersteller = '$ghersteller'");
-         while($s = $getraenk->fetch_object()){
-            $data[] = $s;
-         }
-         if(empty($data)){
-            echo "Dieser Hersteller bietet das ausgewählte Getränk nicht an!";
-            return;
-         }
+        $gname = mysqli_real_escape_string($this->conn, $_POST['gname']);
+        $ghersteller = mysqli_real_escape_string($this->conn, $_POST['ghersteller']);
+        $lagerbest = mysqli_real_escape_string($this->conn, $_POST['lagerbest']);
 
-         //Prüfen, ob Lagerbestand ganze Zahl
-         if(intval($lagerbest) != $lagerbest)   {
-            echo "Der Lagerbestand kann nur eine Ganzzahl sein!";
-            return;
-         }
+        //Prüfen, ob alle Felder befüllt
+        if(empty($gname) || empty($ghersteller) || empty($lagerbest)){
+        echo "Bitte füllen Sie die erforderlichen Felder aus!";
+        return;
+        } 
+        
+        //Prüfen, ob Getränk-Hersteller Kombination existiert
+        $getraenk = $this->conn->query("select * from getraenke where gname = '$gname' AND ghersteller = '$ghersteller'");
+        while($s = $getraenk->fetch_object()){
+        $data[] = $s;
+        }
+        if(empty($data)){
+        echo "Dieser Hersteller bietet das ausgewählte Getränk nicht an!";
+        return;
+        }
+
+        //Prüfen, ob Lagerbestand ganze Zahl
+        if(intval($lagerbest) != $lagerbest)   {
+        echo "Der Lagerbestand kann nur eine Ganzzahl sein!";
+        return;
+        }
          
         //Aufruf der stored function, um die Lager-Tabelle zu aktualisieren und um zu prüfen, ob
         //der eingegebene Bestand nicht negativ ist
@@ -66,8 +64,6 @@ class Lager {
             echo "Der Lagerbestand wurde erfolgreich aktualisiert.";
         }
         $this->conn->close();
-
     }
-
 }
 ?>

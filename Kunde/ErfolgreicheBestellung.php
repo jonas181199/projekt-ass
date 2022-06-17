@@ -95,6 +95,10 @@
 
          //Sämtliche Bestellpositionen durchgehen und in die DB einfügen
          for($i = 1; $i <= $_SESSION['anzPosition']; $i++){
+            $sgname   = "gname" . $i;
+            $shname   = "hname" . $i;
+            $smenge   = "menge" . $i;
+
             if (!$bAbschließen->bestellpositionEinfuegen($_SESSION[$sgname], $_SESSION[$shname], $_SESSION[$smenge], $i)){
                echo "Die Bestellung konnte nicht durchgeführt werden!";
                $conn->close();

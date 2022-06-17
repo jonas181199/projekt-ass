@@ -36,7 +36,7 @@
                 $bestand = $s->bestand - $menge;
             }
             if($bestand < 0){
-                break;
+                return false;
             }
 
             //Bestellposition in die Datenbank einfügen

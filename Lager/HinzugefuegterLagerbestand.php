@@ -1,14 +1,14 @@
 <!-- Noah Schöne -->
 <?php
- 
- include_once '../includes/dbh.inc.php';
- include_once '../classes/lager.php';
- session_start();
 
- if (empty($_SESSION['mid'])) {
-   header('Location: Marktanmeldung.php');
-   exit;
-}
+   include_once '../includes/dbh.inc.php';
+   include_once '../classes/lager.php';
+   session_start();
+
+   if (empty($_SESSION['mid'])) {
+      header('Location: Marktanmeldung.php');
+      exit;
+   }
 
 ?>
 
@@ -24,12 +24,11 @@
    <BODY>
       <!-- HTML-Körper -->
       <?php
-
          // Objekt erzeugen
          $lager = new Lager($_SESSION['mid'], $_POST['gname'], $_POST['ghersteller'], $_POST['lagerbest'], $conn);
          $data[] = null;
          $data = $lager->replaceLagerbestand();
-         ?> 
+      ?> 
          
       <!-- Weiterleitung -->
       <form action="Lagerverwaltung.php">
