@@ -1,22 +1,13 @@
+<!-- Jonas Schirm -->
 <?php  
-<<<<<<< HEAD
    include_once '../includes/dbh.inc.php';
    session_start();
    if ((empty($_SESSION['mid']))) {
       header('Location: ../Anmeldung/Marktanmeldung.php');
       exit;
    }
-=======
-    include_once '../includes/dbh.inc.php';
-
-    if (empty($_SESSION['mid'])) {
-      header('Location: ../Anmeldung/Marktanmeldung.php');
-      exit;
-  }
->>>>>>> 34ca4268e559eb60dd6806f905f69a8d7adb65e0
 ?>
 
-<!-- Noah Schöne -->
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>

@@ -2,13 +2,12 @@
    include_once '../includes/dbh.inc.php';
    session_start();
 
-   if (!isset($_POST['bPrüfen'])) {
+   if ((empty($_SESSION['mid']) OR empty($_SESSION['shname1']) OR empty($_SESSION['sgname1']) OR empty($_SESSION['smenge1'])) AND !isset($_POST['bPrüfen'])) {
       header('Location: Bestellung.php');
       exit;
   }
 ?>
 
-<!-- Julian Alber -->
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>
@@ -38,7 +37,6 @@
                
                   echo "Bestellposition" . $i . ": ";
                   echo "Bitte füllen Sie die erforderlichen Felder aus!";
-                  $conn->close();
                   return;
             }
             
@@ -50,10 +48,8 @@
 
             if($prErfolgreich->BestellungPruefen == 0){
                echo "Die Prüfung ist fehlgeschlagen!";
-               $conn->close();
                return;
             }
-            $conn->close();
          }  
       ?>
 

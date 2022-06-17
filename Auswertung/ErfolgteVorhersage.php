@@ -3,12 +3,7 @@
     session_start();
     include_once '../classes/auswertung.php';
     include_once '../includes/dbh.inc.php';
-<<<<<<< HEAD
     if ((empty($_SESSION['mid']))) {
-=======
-
-    if (empty($_SESSION['mid'])) {
->>>>>>> 34ca4268e559eb60dd6806f905f69a8d7adb65e0
         header('Location: ../Anmeldung/Marktanmeldung.php');
         exit;
     }

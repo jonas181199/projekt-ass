@@ -16,17 +16,14 @@
    
       if (!$markt->alleFelderBelegt()){
          echo "Bitte füllen Sie die erforderlichen Felder aus!";
-         $conn->close();
          return;
       }  
       if (!$markt->midPruefen()){
          echo "Die Markt-ID existiert nicht!";
-         $conn->close();
          return;
       }  
       if (!$markt->passwortPruefen()){
          echo "ID und Passwort stimmen nicht überein!";
-         $conn->close();
          return;
       }  
    }
@@ -40,22 +37,18 @@
       
       if (!$markt->alleFelderBelegt()){
          echo "Bitte füllen Sie die erforderlichen Felder aus!";
-         $conn->close();
          return;
       }  
       if (!$markt->midPruefen()){
          echo "Die Markt-ID ist bereits vergeben!";
-         $conn->close();
          return;
       }  
       if (!$markt->mnamePruefen()){
          echo "Der Marktname ist bereits vergeben!";
-         $conn->close();
          return;
       }  
       if (!$markt->marktHinzufuegen()){
          echo "Fehler beim Erstelen ihres Marktes";
-         $conn->close();
          return;
       } 
       echo "Ihr Markt wurde erfolgreich erstellt.";

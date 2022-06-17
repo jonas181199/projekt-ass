@@ -1,15 +1,17 @@
+<!-- Noah Schöne -->
 <?php
-   include_once '../includes/dbh.inc.php';
-   include_once '../classes/lager.php';
-   session_start();
+ 
+include_once '../includes/dbh.inc.php';
+include_once '../classes/lager.php';
+session_start();
 
-   if (empty($_SESSION['mid'])) {
-      header('Location: ../Anmeldung/Marktanmeldung.php');
-      exit;
-   }
+if (empty($_SESSION['mid'])) {
+   header('Location: Marktanmeldung.php');
+   exit;
+}
+
 ?>
 
-<!-- Noah Schöne -->
 <!DOCTYPE HTML>
 <HTML>
    <HEAD>
