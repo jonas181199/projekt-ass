@@ -5,12 +5,14 @@
    include_once '../classes/bestellungAbschließen.php';
    session_start();
 
+   //Nur wenn der Kunde schon angemeldet ist (email ist gesetzt) oder er von Kundenanmeldung oder Kundenregistrierung kommt kann er die Seite öffnen
    if (empty($_SESSION['email']) AND !isset($_POST['loginkunde']) AND !isset($_POST['registrierekunde'])) {
       header('Location: Kundenanmeldung.php');
       exit;
    }
 
 
+   //Prüfungen, wenn der Benutzer von der Kundenanmeldung-Seite kommt
    if (isset($_POST['loginkunde'])){
       $email = mysqli_real_escape_string($conn, $_POST['email']);
       $kunde = new anmeldungKundeKl($email, $_POST['kkennwort'], $conn);
@@ -21,19 +23,20 @@
          $conn->close();
          return;
       } 
-      //Prüfen, ob Kunden E-Mail existiert    
+      //Prüfen, ob eingegebene E-Mail existiert   
       if(!$kunde->emailPruefen()){
          echo "Die Kunden-email existiert nicht!";
          $conn->close();
          return;
       }     
-      //Prüfen, ob Kunden E-Mail und Passwort übereinstimmen
+      //Prüfen, ob eingegebene E-Mail und Passwort übereinstimmen
       if(!$kunde->kennwortPruefen()){
          echo "E-Mail und Kennwort stimmen nicht überein!";
          $conn->close();
          return;
       } 
    }  
+   //Prüfungen, wenn der Benutzer von der Kundenregistrierung-Seite kommt
    elseif(isset($_POST['registrierekunde'])){
 
       $email = mysqli_real_escape_string($conn, $_POST['email']);
@@ -46,19 +49,19 @@
       $kkennwort    = password_hash($kkennwort_un, PASSWORD_DEFAULT);
       $kunde = new registrierungKundeKl($email, $kname, $plz, $ort, $strasse, $hausnummer, $kkennwort, $conn);
 
-      //Prüfen, ob alle Felder befüllt
+      //Prüfen, ob alle Felder befüllt wurden
       if(!$kunde->alleFelderBelegt()){
          echo "Bitte füllen Sie die erforderlichen Felder aus!";
          $conn->close();
          return;
       }   
-      //Prüfen, ob E-Mail schon registriert ist
+      //Prüfen, ob die eingegebene E-Mail schon registriert ist
       if(!$kunde->emailPruefen()){
          echo "Diese E-Mail ist bereits registriert!";
          $conn->close();
          return;
       }
-      //Kunde in die DB einfügen
+      //Neue Kunde in die DB einfügen
       if (!$kunde->kundeHinzufuegen()){
          echo "Fehler beim Anlegen ihres Accounts!";
          $conn->close();
@@ -67,7 +70,7 @@
       echo "Ihr Account wurde erfolgreich erstellt!";
    }
 
-
+   //Nach Anmeldung oder Registrierung Kunden-email in Session speichern
    if(!isset($_SESSION['email']) OR isset($_POST['loginkunde']) OR isset($_POST['registrierekunde'])){
       $_SESSION['email'] = mysqli_real_escape_string($conn, $_POST['email']);
    } 

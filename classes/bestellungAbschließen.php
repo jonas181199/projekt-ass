@@ -15,6 +15,7 @@
             $this->conn  = $conn;
         }
 
+        //Diese Funktion fügt die eingegebene Bestellung der DB hinzu
         function bestellungEinfuegen($email){           
             $bestellnr   = $this->conn->query("select count(*) as bestnr from bestellung");
             $abestellnr  = $bestellnr->fetch_object();
@@ -28,9 +29,11 @@
             return true;
         }
 
+        //Diese Funktion fügt die einzelnen Bestellpositionen der DB hinzu, wenn der Lagerbestand noch ausreicht
+        //Die Lagerbestände werden aufgrund des Triggers "lagerAktualisieren" automatisch angepasst 
         function bestellpositionEinfuegen($gname, $hname, $menge, $position){
 
-            //Prüfen, ob Lagerbestand noch ausreicht (z.B.: Falls parallele Zugriffe, im Normalfall kein Problem, da schon geprüft)
+            //Prüfen, ob Lagerbestand noch ausreicht (z.B.: Falls parallele Zugriffe), im Normalfall kein Problem, da schon geprüft)
             $sqlbestand = $this->conn->query("select bestand from lager where gname = '$gname' AND ghersteller = '$hname' AND mid = '$this->mid'");
             while($s = $sqlbestand->fetch_object()){
                 $bestand = $s->bestand - $menge;

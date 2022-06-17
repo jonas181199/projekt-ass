@@ -26,6 +26,7 @@
             $this->conn       = $conn;
         }
 
+        //Diese Funktion prüft, ob der Benutzer sämtliche erforderliche Felder befüllt hat
         function alleFelderBelegt(){
             if(!isset($this->email)      || strlen($this->email) == 0 || 
                !isset($this->kname)      || strlen($this->kname) == 0 || 
@@ -39,6 +40,7 @@
             } 
             return true;
         }
+        //Diese Funktion prüft, ob die eingegebene E-mail bereits in der DB existiert
         function emailPruefen(){
             $emails = $this->conn->query("select email from kunde");
             while(($s = $emails->fetch_object()) != false){
@@ -48,7 +50,7 @@
             }
             return true;
         }
-
+        //Diese Funktion fügt den neuen Kunde der DB hinzu
         function kundeHinzufuegen(){
             $sql = "insert into kunde values ('" . $this->email. "', '" . $this->kkennwort . "', '" . $this->kname. "', '" . $this->plz. "', '" . $this->ort. "', '" . $this->strasse. "', '" . $this->hausnummer. "')";
             if ($this->conn->query($sql) == false){

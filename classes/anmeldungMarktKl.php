@@ -16,6 +16,7 @@
             $this->conn      = $conn;
         }
 
+        //Diese Funktion prüft, ob der Benutzer sämtliche erforderliche Felder befüllt hat
         function alleFelderBelegt(){
             if(!isset($this->mid)       || strlen($this->mid) == 0 || 
                !isset($this->mpasswort) || strlen($this->mpasswort) == 0){
@@ -24,6 +25,7 @@
             } 
             return true;
         }
+        //Diese Funktion prüft, ob die eingegebene Markt-ID in der DB existiert
         function midPruefen(){
             $mids = $this->conn->query("select mid from markt");
             while(($s = $mids->fetch_object()) != false){
@@ -33,6 +35,7 @@
             }
             return false;
         }
+        //Diese Funktion prüft, ob die eingegebene Markt-ID und Passwort übereinstimmen
         function passwortPruefen(){
             $markt = $this->conn->query("select mpasswort from markt where mid = '$this->mid'");
             $s = $markt->fetch_object();

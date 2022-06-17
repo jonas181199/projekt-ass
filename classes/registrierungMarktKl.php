@@ -18,6 +18,7 @@
             $this->conn      = $conn;
         }
 
+        //Diese Funktion prüft, ob der Benutzer sämtliche erforderliche Felder befüllt hat
         function alleFelderBelegt(){
             if(!isset($this->mid)       || strlen($this->mid) == 0 || 
                !isset($this->mname)     || strlen($this->mname) == 0 || 
@@ -27,6 +28,7 @@
             } 
             return true;
         }
+        //Diese Funktion prüft, ob die eingegebene Markt-ID bereits in der DB existiert
         function midPruefen(){
             $mids = $this->conn->query("select mid from markt");
             while(($s = $mids->fetch_object()) != false){
@@ -36,6 +38,7 @@
             }
             return true;
         }
+        //Diese Funktion prüft, ob der eingegebene Marktname bereits in der DB existiert
         function mnamePruefen(){
             $mn = $this->conn->query("select mname from markt");
             while(($s = $mn->fetch_object()) != false){
@@ -45,7 +48,7 @@
             }
             return true;
         }
-
+        //Diese Funktion fügt den neuen Markt der DB hinzu
         function marktHinzufuegen(){
             $sql = "insert into markt values ('" . $this->mid. "', '" . $this->mpasswort. "', '" . $this->mname. "')";
             if ($this->conn->query($sql) == false){

@@ -100,6 +100,7 @@
 
 
 		/** Noah Schöne */
+		//Diese Funktion ermittelt aus der Datenbank den Gesamtumsatz der jeweiligen Woche (Montag bis Sonntag)
 		public function getGesamtumsatz($timestamp_montag, $timestamp_sonntag){
 			$sqlgu = "SELECT SUM(g.preis * bp.ganzahl) AS gpreis FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.mid = $this->mid AND g.kategorie like '$this->kategorie' AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag'";                       
 			$resultgu = $this->conn->query($sqlgu);
@@ -111,6 +112,7 @@
 			}
 		}
 
+		//Diese Funktion ermittelt aus der Datenbank die Größte Bestellung der jeweiligen Woche (Montag bis Sonntag)
 		private function getGroesteBestellung($timestamp_montag, $timestamp_sonntag){
 			$sqlgb = "SELECT MAX(summe) AS maxSumme FROM (SELECT SUM(g.preis * bp.ganzahl) AS summe, b.bestellnr FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.mid = $this->mid AND g.kategorie like '$this->kategorie' AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag' GROUP BY b.bestellnr) AS summen";                 
 			$resultgb = $this->conn->query($sqlgb);
@@ -124,9 +126,12 @@
 
 
 		/** Julian Alber */
+		//Diese Funktion berechnet die Standartabweichung der Umsätze der Bestellungen der jeweiligen Woche (Montag bis Sonntag)
 		private function getStandardabweichung($timestamp_montag, $timestamp_sonntag){		
 		
+			//Durchschnittliche Umsatz sämtlicher Bestellungen ermitteln
 			$savg    = "SELECT AVG(g.preis * bp.ganzahl) as average FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.mid = $this->mid AND g.kategorie like '$this->kategorie' AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag'";                                          
+			//Einzelne Umsätze der Bestellungen ermitteln
 			$spreise = "SELECT (g.preis * bp.ganzahl) as gpreis, b.bestellnr FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.mid = $this->mid AND g.kategorie like '$this->kategorie' AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag' GROUP BY b.bestellnr";                       
 			$iavg    = 0;
 			$abw     = 0;
@@ -152,9 +157,9 @@
 			}                  
 		}
 
-
+		//Diese Funktion berechnet den Median der Umsätze der Bestellungen der jeweiligen Woche (Montag bis Sonntag)
 		private function getMedian($timestamp_montag, $timestamp_sonntag){
-			
+			//Einzelne Umsätze der Bestellungen ermitteln
 			$smedian  = "SELECT SUM(g.preis * bp.ganzahl) AS gpreis, b.bestellnr FROM bestellpos bp, bestellung b, getraenke g where bp.bestellnr = b.bestellnr AND bp.ghersteller = g.ghersteller AND bp.gname = g.gname AND b.mid = $this->mid AND g.kategorie like '$this->kategorie' AND b.bestdatum >= '$timestamp_montag' AND b.bestdatum <= '$timestamp_sonntag' GROUP BY b.bestellnr"; 
 			$resultmedian = $this->conn->query($smedian);
 			unset($preisa);
@@ -184,48 +189,62 @@
 		}
 
 
-
+		//Diese Funktion durchläuft sämtliche Wochen vom ausgewählten Datum, bis zur aktuellen Woche 
+		//und ermittelt für diese jeweils den Gesamtumsatz, die Größte Bestellung, die Standartabweichung und den Median.
+		//Die ermittelten Werte werden mit einem Array zurückgegeben
 		public function getAuswertungsTabelle(){
+			
+			$akJahr  = idate('Y');
+			$akWoche = date('W');
+			//Woche des eingegebenen Datums ermitteln
+			$ewoche  = date('W', strtotime($this->start_datum));
+			$data	 = [];
+			$h       = 0;
 
-			$akJahr   = idate('Y');
-			$akWoche  = date('W');
-			$ewoche   = date('W', strtotime($this->start_datum));
-			$data[][] = null;
-			$h        = 0;
-
-			// Jahresgrenzending
+			//Jahr des eingegebenen Datums ermitteln
 			$eJahr = date("Y", strtotime($this->start_datum));
+			//Wenn es die 52. oder die 53. Woche ist, das Jahr aber schon das neue, wird das Jahr des eingegebenen Datums dekrementiert, um den richtigen Wert zu erhalten
 			if (date("m", strtotime($this->start_datum)) == "01" && (date("W", strtotime($this->start_datum)) == 52 || date("W", strtotime($this->start_datum)) == 53)){
 				$eJahr--;
 			}    
+			//Wenn es die 1. Woche ist, das Jahr aber noch das alte, wird das Jahr des eingegebenen Datums inkrementiert, um den richtigen Wert zu erhalten
 			else if (date("m", strtotime($this->start_datum)) == "12" && date("W", strtotime($this->start_datum)) == 01){
 				$eJahr++;
 			}
 
+			//Sämtliche Jahre vom eingegebenen Datum bis zum heutigen Datum durchlaufen
 			for($j = $eJahr; $j <= $akJahr; $j++)  {
 
+				//Wochenzahl der Woche ermitteln, bis zu der das jeweilige Jahr durchlaufen werden müssen 
+				//Ist das Jahr das aktuell durchlaufen wird nicht das aktuelle Jahr ist dies die Gesamtanzahl der Wochen des Jahres
 				if($j < $akJahr) {
 					$anzW = idate('W', mktime(0, 0, 0, 12, 28, $j));
-				} elseif($j == $akJahr)  {
+				} 
+				//Ist es das aktuelle Jahr entspricht es der Wochenzahl der aktuellen Woche
+				elseif($j == $akJahr)  {
 					$anzW = $akWoche;
 				}
 
+				//Sämtliche Wochen des Jahres innerhalb des gegebenen Zeitraumes durchgehen
+				//eWoche entspricht der Woche ab der im jeweiligen Jahr begonnen werden muss
+				//anzW ist die in Zeilen 220-226 ermittelt Woche bis zu der das Jahr durchchlaufen werden muss
 				for($i = $ewoche; $i <= $anzW; $i++) {
 
+					//Start- und Endtag der jeweiligen Woche berechnen und KW setzen 
 					$timestamp_montag  = date("Y-m-d", strtotime("{$j}-W{$i}"));
 					$timestamp_sonntag = date("Y-m-d", strtotime("{$j}-W{$i}-7"));                   
 					$data[$h]['KW'] = $i;               
 					
-					//Gesamtumsatz
+					//Gesamtumsatz der jeweiligen Woche berechnen
 					$data[$h]['Gesamtumsatz'] = $this->getGesamtumsatz($timestamp_montag, $timestamp_sonntag);
 
-					//Größte Bestellung
+					//Größte Bestellung der jeweiligen Woche berechnen
 					$data[$h]['Größte Bestellung'] = $this->getGroesteBestellung($timestamp_montag, $timestamp_sonntag);
 
-					//Standardabweichung
+					//Standardabweichung der jeweiligen Woche berechnen
 					$data[$h]['Standardabweichung'] = $this->getStandardabweichung($timestamp_montag, $timestamp_sonntag);
 
-					//Median
+					//Median der jeweiligen Woche berechnen
 					$data[$h]['Median'] = $this->getMedian($timestamp_montag, $timestamp_sonntag);
 			
 					$h++;

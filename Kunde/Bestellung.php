@@ -26,6 +26,7 @@
          <fieldset>
             <legend>Bitte die Daten für Ihre Bestellung eingeben</legend>
             <?php          
+                // Genau so viele Eingabefelder für Bestellpositionen anzeigen, wie in der index.php eingegeben wurden     
                 for ($i = 1; $i <= $_SESSION['anzPosition']; $i++){
                     echo "Bestellposition " . $i;
                     $gname = "gname" . $i;
@@ -33,6 +34,7 @@
                     $menge = "menge" . $i;
             ?>
             <p>
+                <!-- Sämtliche Getränkenamen aus der Datenbank in einer Auswahlliste anzeigen -->
                 <label for="gname">Getränkename: </label>
                 <select name="<?php echo $gname; ?>">
                     <?php
@@ -45,6 +47,7 @@
                     ?>
                 </select> 
 
+                <!-- Sämtliche Getränkehersteller aus der Datenbank in einer Auswahlliste anzeigen -->
                 <label for="hname">Hersteller: </label>
                 <select name="<?php echo $hname; ?>">
                     <?php

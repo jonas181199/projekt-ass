@@ -3,10 +3,12 @@
     include_once '../classes/auswertung.php';
     session_start();
 
+    //Nur wenn als Markt angemeldet Zugang zu dieser Seite
     if (empty($_SESSION['mid'])) {
         header('Location: ../Anmeldung/Marktanmeldung.php');
         exit;
     }
+    //verhindert, dass kein Startdatum eingegeben wird
     if (empty($_POST['start'])) {
         header('Location: Auswertung.php');
         exit;
@@ -24,7 +26,7 @@
     </HEAD>
     <BODY>
         <?php
-            //Objekt erzeugen
+            //Objekt der Klasse Auswertung mit eingegebenen Zeitraum und Kategorie erzeugen und sämtliche Werte für die Auswertungstabelle holen
             $auswertung = new Auswertung($_POST['start'], $_POST['kategorie'], $_SESSION['mid'], $conn);  
             $data[][] = null;          
             $data = $auswertung->getAuswertungsTabelle();
@@ -45,8 +47,10 @@
                     <?php
                         if(empty($data)){
                             echo("Es kann noch keine Tabelle erzeugt werden.");
-                        } else {
-                        foreach ($data as $content){                        
+                        } 
+                        else {    
+                            //Sämtliche Werte der jeweiligen Wochen im angegebenen Zeitraum ausgeben                   
+                            foreach ($data as $content){                        
                     ?>
                     <tr>
                         <td>

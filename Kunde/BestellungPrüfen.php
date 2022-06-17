@@ -19,6 +19,7 @@
    </HEAD>
    <BODY>
       <?php      
+         //Sämtliche Bestellpositionen durchgehen
          for ($i = 1; $i <= $_SESSION['anzPosition']; $i++){
 
             $sgname   = "gname" . $i;
@@ -31,7 +32,7 @@
             $_SESSION[$shname] = mysqli_real_escape_string($conn, $_POST[$shname]);
             $_SESSION[$smenge] = mysqli_real_escape_string($conn, $_POST[$smenge]);
 
-            //Prüfen, ob alle Felder befüllt
+            //Prüfen, ob alle Felder befüllt wurden
             if(!isset($_POST[$sgname]) || strlen($_POST[$sgname]) == 0 || 
                !isset($_POST[$shname]) || strlen($_POST[$shname]) == 0 || 
                !isset($_POST[$smenge]) || strlen($_POST[$smenge]) == 0){
@@ -41,6 +42,9 @@
                   return;
             }
             
+            //Stored Function "BestellungPruefen" aufrufen
+            //Diese prüft, ob die vorhandene Lagermenge ausreicht und ob die Getränk-Hersteller Kombination existiert
+            //Im Fehlerfall wird eine 0 zurückgegeben
             $stmt = $conn->prepare("SELECT BestellungPruefen(?, ?, ?, ?) AS BestellungPruefen");
             $stmt->bind_param("ssis", $_SESSION[$shname], $_SESSION[$sgname], $_SESSION[$smenge], $_SESSION[$smid]); 
             $stmt->execute();

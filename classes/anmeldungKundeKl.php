@@ -16,6 +16,7 @@
             $this->conn      = $conn;
         }
 
+        //Diese Funktion prüft, ob der Benutzer sämtliche erforderliche Felder befüllt hat
         function alleFelderBelegt(){
             if(!isset($this->email)       || strlen($this->email) == 0 || 
                !isset($this->kkennwort) || strlen($this->kkennwort) == 0){
@@ -24,6 +25,7 @@
             } 
             return true;
         }
+        //Diese Funktion prüft, ob die eingegebene E-mail in der DB existiert
         function emailPruefen(){
             $emails = $this->conn->query("select email from kunde");
             while(($s = $emails->fetch_object()) != false){
@@ -33,6 +35,7 @@
             }
             return false;
         }
+        //Diese Funktion prüft, ob die eingegebene E-mail und Passwort übereinstimmen
         function kennwortPruefen(){
             $kunde = $this->conn->query("select kkennwort from kunde where email = '$this->email'");
             $s = $kunde->fetch_object();
