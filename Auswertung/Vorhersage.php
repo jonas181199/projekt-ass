@@ -26,6 +26,7 @@
     <form action="ErfolgteVorhersage.php" method="POST">
 		<label for="kategorie">Kategorie</label><br>
 	     <select name="kategorie">
+            <!-- % als Platzhalter-->
 	        <option value="%" selected="selected">Alle</option>
 	        <option value ="Wasser">Wasser</option>
 	        <option value ="Saft">Saft</option>

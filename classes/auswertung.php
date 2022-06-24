@@ -28,9 +28,11 @@
 			$akJahr   = idate('Y');
 			//Jahr des Datums minus 16 W ermitteln
 			$eJahr    = date('Y', strtotime("-16 weeks"));
+			//aktuelle Woche ermitteln
 			$akWoche  = date('W');
-			//Jahr des Datums minus 16 W ermitteln
+			//Woche des Datums minus 16 W ermitteln
 			$ewoche   = date('W', strtotime("-16 weeks"));
+			//exaktes Datum mit jahr monat tag - kombiniert ejahr und ewoche = timestamp
 			$this->start_datum = date("Y-m-d", strtotime("{$eJahr}-W{$ewoche}"));
 			$data = [];
 			$h    = 0;
@@ -44,7 +46,7 @@
 				$eJahr++;
 			}
 
-			//Sämtliche Jahre -16 W bis zum heutigen Datum durchlaufen
+			//Sämtliche Jahre -16 W bis zum heutigen Datum durchlaufen (höchstens 2 Jahre, meist nur das aktuelle)
 			for($j = $eJahr; $j <= $akJahr; $j++)  {
 
 				//Wochenzahl der Woche ermitteln, bis zu der das jeweilige Jahr durchlaufen werden müssen 
@@ -58,31 +60,49 @@
 				}
 
 				//Sämtliche Wochen des Jahres innerhalb des gegebenen Zeitraumes durchgehen
+				//eWoche ist aktWoche - 16
 				for($i = $ewoche + 1; $i <= $anzW; $i++) {
 
-					//Start- und Endtag der jeweiligen Woche berechnen und KW setzen 
+					//Start- und Endtag der jeweiligen Woche berechnen und KW setzen
+					//genauer timestamp für montag
+					//j = pro Durchlauf das Jahr welches durchlaufen wird
+					//i = Woche die aktuelle durchlaufen wird 
 					$timestamp_montag  = date("Y-m-d", strtotime("{$j}-W{$i}"));
 					$timestamp_sonntag = date("Y-m-d", strtotime("{$j}-W{$i}-7"));                                 
 					
 					//Gesamtumsatz der jeweiligen Woche berechnen
+					//holt Werte aus Datenbank die zwischen Montag und Sonntag liegen
+					//Werte in Array gespeichert
+					//h Zählvariable für data
 					$data[$h]['Gesamtumsatz'] = $this->getGesamtumsatz($timestamp_montag, $timestamp_sonntag);
+
 
 					$h++;
 				}
+				//für Fall, dass wenn man in das neue Jahr kommt, dass eWoche auf 1 zurückgesetzt wird
 				$ewoche = 1;
 			}
 
+			//Hilfsarray
 			$hilfsarray = [];
+			/** Initialisierung und Definition */
 			$i = 0;
 			$gesamtx = 0;
 			$gesamty = 0;
 			$quadratgesamtx = 0;
 			$produktxy = 0;
+			//Array data mit Gesamtumsätzen der Woche wird durchlaufen
+			//bei jedem Durchlauf wird Wert des Arrays gespeichert
 			foreach ($data as $key => $value) {
+				//in key steht Gesamtumsatz je Woche -> Wert steht in $key
 				$hilfsarray[$i]['Woche'] = $key;
+				//Wert des Gesamtumsatzes
 				$hilfsarray[$i]['Umsatz x'] = $value['Gesamtumsatz'];
+				//aufsummieren der Umsätze der Woche
 				$gesamtx += $hilfsarray[$i]['Umsatz x'];
+				//nächste Pos. Array Gesamtumsatz
 				$hilfsarray[$i]['KommenderUmsatz y'] = $data[$i+1]['Gesamtumsatz'];
+				//Aufsummieren des kommenden Umsatzes
 				$gesamty += $hilfsarray[$i]['KommenderUmsatz y'];
 				$hilfsarray[$i]['xquadratiert'] = $value['Gesamtumsatz'] * $value['Gesamtumsatz'];
 				$quadratgesamtx += $hilfsarray[$i]['xquadratiert'];
